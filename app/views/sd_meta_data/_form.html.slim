@@ -1,0 +1,54 @@
+= simple_form_for(@sd_meta_datum, html: { data: { 'abide': '', 'live-validate': true } }) do |f|
+  = f.error_notification
+  <ul class="accordion" data-accordion data-allow-all-closed="true">
+    <li class="accordion-item" data-accordion-item>
+      <a href="#" class="accordion-title">Data Items 2-12</a>
+      <div class="accordion-content" data-tab-content>
+        = f.input :report_title
+        = f.association :project
+        = f.association :funding_sources, as: :check_boxes
+        = f.input :date_of_last_search, as: :datetime, html5: true
+        = f.input :date_of_publication_to_srdr, as: :datetime, html5: true
+        = f.input :date_of_publication_full_report, as: :datetime, html5: true
+        = f.association :funding_sources, as: :check_boxes
+        = f.input :stakeholder_involvement_extent
+        = f.input :authors_conflict_of_interest_of_full_report
+        = f.input :stakeholders_conflict_of_interest
+      </div>
+    </li>
+    <li class="accordion-item" data-accordion-item>
+      <a href="#" class="accordion-title">Data Items 13-31</a>
+      <div class="accordion-content" data-tab-content>
+        = f.input :prototcol_link, as: :string
+        = f.input :full_report_link, as: :string
+        = f.input :structured_abstract_link, as: :string
+        = f.input :key_messages_link, as: :string
+        = f.input :abstract_summary_link, as: :string
+        = f.input :evidence_summary_link, as: :string
+        = f.input :evs_introduction_link, as: :string
+        = f.input :evs_methods_link, as: :string
+        = f.input :evs_results_link, as: :string
+        = f.input :evs_discussion_link, as: :string
+        = f.input :evs_conclusions_link, as: :string
+        = f.input :evs_tables_figures_link, as: :string
+        = f.input :disposition_of_comments_link, as: :string
+        = f.input :srdr_data_link
+        = f.input :most_previous_version_srdr_link, as: :string
+        = f.input :most_previous_version_full_report_link, as: :string
+      </div>
+    </li>
+    <li class="accordion-item" data-accordion-item>
+      <a href="#" class="accordion-title">Data Items 32-34</a>
+      <div class="accordion-content" data-tab-content>
+        = f.input :overall_purpose_of_review
+        = f.input :type_of_review
+        = f.input :level_of_analysis
+      </div>
+    </li>
+  </ul>
+
+  .form-actions
+  = f.button :submit
+
+.column.row
+= link_to 'Back', sd_meta_data_path

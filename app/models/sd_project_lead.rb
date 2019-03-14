@@ -1,0 +1,2 @@
+class SdProjectLead < ApplicationRecord
+end

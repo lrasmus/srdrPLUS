@@ -2,6 +2,7 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   resources :searches, only: [:new, :create]
+  resources :sd_meta_data
 
   devise_for :admins
   devise_for :users, controllers: {
@@ -26,7 +27,7 @@ Rails.application.routes.draw do
       resources :users, only: [:index]
       resources :authors, only: [:index]
       resources :timepoint_names, only: [:index]
-      resources :citations, only: [:index] do 
+      resources :citations, only: [:index] do
         collection do
           get 'titles'
         end
@@ -204,4 +205,3 @@ Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
-
