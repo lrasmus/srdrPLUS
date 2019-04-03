@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_20_092613) do
+ActiveRecord::Schema.define(version: 2019_03_29_065213) do
 
   create_table "abstrackr_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "profile_id"
@@ -1173,11 +1173,32 @@ ActiveRecord::Schema.define(version: 2019_03_20_092613) do
 
   create_table "sd_key_questions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "sd_meta_datum_id"
+    t.integer "sd_key_question_id"
+    t.integer "key_question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key_question_id"], name: "index_sd_key_questions_on_key_question_id"
+    t.index ["sd_key_question_id"], name: "index_sd_key_questions_on_sd_key_question_id"
+    t.index ["sd_meta_datum_id"], name: "index_sd_key_questions_on_sd_meta_datum_id"
+  end
+
+  create_table "sd_key_questions_key_question_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "sd_key_question_id"
+    t.bigint "key_question_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key_question_type_id"], name: "index_kq_types"
+    t.index ["sd_key_question_id", "key_question_type_id"], name: "index_sd_kqs_kq_types"
+    t.index ["sd_key_question_id"], name: "index_sd_kqs"
+  end
+
+  create_table "sd_key_questions_projects", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "sd_key_question_id"
     t.integer "key_questions_project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["key_questions_project_id"], name: "index_sd_key_questions_on_key_questions_project_id"
-    t.index ["sd_meta_datum_id"], name: "index_sd_key_questions_on_sd_meta_datum_id"
+    t.index ["key_questions_project_id"], name: "index_sd_key_questions_projects_on_key_questions_project_id"
+    t.index ["sd_key_question_id"], name: "index_sd_key_questions_projects_on_sd_key_question_id"
   end
 
   create_table "sd_key_questions_sd_picods", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1217,6 +1238,7 @@ ActiveRecord::Schema.define(version: 2019_03_20_092613) do
     t.text "overall_purpose_of_review"
     t.string "type_of_review"
     t.string "level_of_analysis"
+    t.string "state", default: "DRAFT", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -1628,8 +1650,11 @@ ActiveRecord::Schema.define(version: 2019_03_20_092613) do
   add_foreign_key "sd_analytic_frameworks", "sd_meta_data"
   add_foreign_key "sd_grey_literature_searches", "sd_meta_data"
   add_foreign_key "sd_journal_article_urls", "sd_meta_data"
-  add_foreign_key "sd_key_questions", "key_questions_projects"
+  add_foreign_key "sd_key_questions", "key_questions"
+  add_foreign_key "sd_key_questions", "sd_key_questions"
   add_foreign_key "sd_key_questions", "sd_meta_data"
+  add_foreign_key "sd_key_questions_projects", "key_questions_projects"
+  add_foreign_key "sd_key_questions_projects", "sd_key_questions"
   add_foreign_key "sd_key_questions_sd_picods", "sd_key_questions"
   add_foreign_key "sd_key_questions_sd_picods", "sd_picods"
   add_foreign_key "sd_other_items", "sd_meta_data"

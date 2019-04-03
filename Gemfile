@@ -150,3 +150,9 @@ gem 'httparty'
 
 # Formatted console logs
 gem "awesome_print"
+
+# Fuzzy Match
+gem "fuzzy_match"
+
+# Font Awesome Icons
+gem "font-awesome-rails"

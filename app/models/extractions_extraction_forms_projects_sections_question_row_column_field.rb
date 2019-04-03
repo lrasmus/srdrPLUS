@@ -25,10 +25,10 @@ class ExtractionsExtractionFormsProjectsSectionsQuestionRowColumnField < Applica
 
 #  def record_ids=(tokens)
 #    byebug
-#    tokens.map { |token|
+#    tokens.map do |token|
 #      resource = self.question_row_column_field.question_row_column.question_row_columns_question_row_column_options.build(question_row_column_option_id: 1)
 #      save_resource_name_with_token(resource, token)
-#    }
+#    end
 #    byebug
 #    super
 #  end

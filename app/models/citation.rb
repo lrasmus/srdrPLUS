@@ -22,10 +22,10 @@ class Citation < ApplicationRecord
   accepts_nested_attributes_for :labels, reject_if: :all_blank, allow_destroy: true
 
   def author_ids=(tokens)
-    tokens.map { |token|
+    tokens.map do |token|
       resource = Author.new
       save_resource_name_with_token(resource, token)
-    }
+    end
     super
   end
 
@@ -44,10 +44,10 @@ class Citation < ApplicationRecord
 
 
   def keyword_ids=(tokens)
-    tokens.map { |token|
+    tokens.map do |token|
       resource = Keyword.new
       save_resource_name_with_token(resource, token)
-    }
+    end
     super
   end
 

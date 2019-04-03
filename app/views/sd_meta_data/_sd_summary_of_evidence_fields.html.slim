@@ -1,0 +1,5 @@
+.nested-fields
+  = f.input :sd_key_question, collection: %w[Kq1 Kq2 Kq3 Kq4]
+  = f.input :soe_type, label: 'Summary of Findings Type', collection: ["Summary of Findings", "Narrative Summary of Findings", "Strength of Evidence", "Risk of Bias"]
+  = f.input :name, label: 'Description', :input_html => { :rows => 5 }
+  = link_to_remove_association "remove", f

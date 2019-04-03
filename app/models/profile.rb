@@ -29,10 +29,10 @@ class Profile < ApplicationRecord
   validate :validate_username
 
   def degree_ids=(tokens)
-    tokens.map { |token|
+    tokens.map do |token|
       resource = Degree.new
       save_resource_name_with_token(resource, token)
-    }
+    end
     super
   end
 
@@ -92,4 +92,3 @@ class Profile < ApplicationRecord
 #      PaperTrail::Version.where(event: 'destroy', item_type: self.class.name, item_id: self.id).last.created_at
 #    end
 end
-

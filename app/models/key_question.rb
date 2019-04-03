@@ -1,5 +1,6 @@
 class KeyQuestion < ApplicationRecord
   include SharedSuggestableMethods
+  include SharedQueryableMethods
 
   acts_as_paranoid
   has_paper_trail
@@ -11,6 +12,9 @@ class KeyQuestion < ApplicationRecord
   has_many :key_questions_projects, dependent: :destroy, inverse_of: :key_question
   has_many :projects,         through: :key_questions_projects, dependent: :destroy
   has_many :extraction_forms, through: :key_questions_projects, dependent: :destroy
+
+  has_many :sd_key_questions, inverse_of: :key_question
+  has_many :sd_meta_data, through: :sd_key_questions
 
   validates :name, presence: true, uniqueness: { case_sensitive: true }
 end

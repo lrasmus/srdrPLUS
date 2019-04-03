@@ -28,6 +28,7 @@ class CreateSdMetaData < ActiveRecord::Migration[5.0]
       t.text :overall_purpose_of_review
       t.string :type_of_review
       t.string :level_of_analysis
+      t.string :state, null: false, default: 'DRAFT'
 
       t.timestamps
     end
