@@ -42,3 +42,6 @@ dump.rdb
 
 # Ignore passenger files.
 passenger*
+
+# Ignore storage
+storage/

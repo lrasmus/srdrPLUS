@@ -43,7 +43,12 @@ class SdMetaDatum < ApplicationRecord
     SRDR::KeyQuestion.where(project_id: self.project_id)
   end
 
-  def
+  def section_statuses
+    (0..5).to_a.map do |i|
+      section = 'section_flag_' + i.to_s
+      self[section]
+    end
+  end
 
   def toggle_state
     new_state = state == 'DRAFT' ? 'COMPLETED' : 'DRAFT'

@@ -43,6 +43,17 @@
                 = f.input :date_of_publication_full_report, as: :date, html5: true, label: '6. Date of Publication of Full Report (to be taken from Report) "Auto"'
           br/
           br/
+          fieldset
+            legend Section Review & Validation
+            div data-row-span="1"
+              div data-field-span="1"
+                div Section Finished?
+                .switch
+                  input.switch-input id="0-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
+                  label.switch-paddle for="0-yes-no-section"
+                    span.switch-active aria-hidden="true" Yes
+                    span.switch-inactive aria-hidden="true" No
+          br/
         #panel-1.tabs-panel
           fieldset
             legend Authors and Stakeholders
@@ -69,6 +80,17 @@
                 - @project.leading.map do |user|
                   div #{user.fname} #{user.lname} (#{user.email})
           br/
+          br/
+          fieldset
+            legend Section Review & Validation
+            div data-row-span="1"
+              div data-field-span="1"
+                div Section Finished?
+                .switch
+                  input.switch-input id="1-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
+                  label.switch-paddle for="1-yes-no-section"
+                    span.switch-active aria-hidden="true" Yes
+                    span.switch-inactive aria-hidden="true" No
           br/
         #panel-2.tabs-panel
           fieldset
@@ -132,6 +154,17 @@
                 = f.input :most_previous_version_full_report_link, as: :string, label: '31. to Most Recent Previous Version of Full Report "Auto"'
           br/
           br/
+          fieldset
+            legend Section Review & Validation
+            div data-row-span="1"
+              div data-field-span="1"
+                div Section Finished?
+                .switch
+                  input.switch-input id="2-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
+                  label.switch-paddle for="2-yes-no-section"
+                    span.switch-active aria-hidden="true" Yes
+                    span.switch-inactive aria-hidden="true" No
+          br/
         #panel-3.tabs-panel
           fieldset
             legend Purpose and Key Questions
@@ -164,11 +197,22 @@
                   = link_to_add_association 'add', f, :sd_picods
           br/
           br/
+          fieldset
+            legend Section Review & Validation
+            div data-row-span="1"
+              div data-field-span="1"
+                div Section Finished?
+                .switch
+                  input.switch-input id="3-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
+                  label.switch-paddle for="3-yes-no-section"
+                    span.switch-active aria-hidden="true" Yes
+                    span.switch-inactive aria-hidden="true" No
+          br/
         #panel-4.tabs-panel
           fieldset
             <legend> Mapping Key Questions (Submitter Only)
-              .button.tiny.mapping-controls id="check-mapping" onClick="dismissWarnings()" style="float: right;" Manually Dismiss Warnings
-              .button.tiny.mapping-controls id="check-mapping" onClick="checkMapping(true)" style="float: right;" Submit Check
+              / .button.tiny.mapping-controls id="check-mapping" onClick="dismissWarnings()" style="float: right;" Manually Dismiss Warnings
+              /
             </legend>
             div data-row-span="2"
               div data-field-span="2"
@@ -193,13 +237,28 @@
                     <div data-reportKeyQuestionId="#{sd_key_question.id}" class="droppable disableselect">#{sd_key_question.key_question.name}<div id="srdr_kq-#{fuzzy_match.id}" data-keyQuestionId="#{fuzzy_match.id}" draggable="true" class="draggable clickremove">#{fuzzy_match.question} - (click to remove)</div></div><a style="margin: 10px;" onClick="resetMapping(#{sd_key_question.id})" class="button tiny">Reset Auto Match</a>
                   - else
                     <div data-reportKeyQuestionId="#{sd_key_question.id}" class="droppable disableselect">#{sd_key_question.key_question.name}</div><a style="margin: 10px;" onClick="resetMapping(#{sd_key_question.id})" class="button tiny">Reset Auto Match</a>
-
+          br/
+          br/
+          fieldset
+            legend Section Review & Validation
+            div data-row-span="4"
+              div data-field-span="4"
+                div Section Finished?
+                .switch style="float: left;"
+                  input.switch-input id="4-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
+                  label.switch-paddle for="4-yes-no-section"
+                    span.switch-active aria-hidden="true" Yes
+                    span.switch-inactive aria-hidden="true" No
+            div data-row-span="4"
+              div data-field-span="4"
+                div#missing-mappings
+          br/
         #panel-5.tabs-panel
           fieldset
             legend Search Strategy & Summary of Results
             div data-row-span="1"
               div data-field-span="1"
-                label 36. Analytic/ Conceptual Framework (Note: Clarify this)
+                label 36. Analytic/ Conceptual Framework
                 = f.simple_fields_for :sd_analytic_frameworks do |sd_analytic_framework|
                   = render 'sd_analytic_framework_fields', f: sd_analytic_framework
                 div
@@ -232,8 +291,18 @@
                   = render 'sd_summary_of_evidence_fields', f: sd_summary_of_evidence
                 div
                   = link_to_add_association 'add', f, :sd_summary_of_evidences
-
           br/
+          br/
+          fieldset
+            legend Section Review & Validation
+            div data-row-span="1"
+              div data-field-span="1"
+                div Section Finished?
+                .switch
+                  input.switch-input id="5-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
+                  label.switch-paddle for="5-yes-no-section"
+                    span.switch-active aria-hidden="true" Yes
+                    span.switch-inactive aria-hidden="true" No
           br/
       .form-actions
         = f.error_notification
@@ -363,7 +432,7 @@ javascript:
     });
   };
 
-  var checkMapping = function(withWarning) {
+  var checkMapping = function() {
     var emptyReportQuestions = [];
     var emptySrdrQuestions = [];
 
@@ -386,23 +455,37 @@ javascript:
       return parentNode.text();
     })
 
-    if (emptySrdrQuestions.length > 0) {
-      $('#panel-4-label').html('Mapping Key Questions (Submitter Only) <i id="map-warning" class="fa fa-exclamation-triangle"></i>');
-      if (withWarning) alert(`Please proceed only if you are sure.\n\nThe below SRDR Key Questions haven't been mapped.\n\n${emptySrdrQuestions.join("\n\n")}`);
-    } else {
-      $('#panel-4-label').html("Mapping Key Questions (Submitter Only)");
-    }
+    return { emptyReportQuestions: emptyReportQuestions, emptySrdrQuestions: emptySrdrQuestions }
+  }
 
-    if (emptyReportQuestions.length > 0) {
-      $('#panel-3-label').html('Purpose and Key Questions <i id="map-warning" class="fa fa-exclamation-triangle"></i>');
-      if (withWarning) alert(`You may return to "Purpose and Key Questions" to remove any superfluous Key Questions or press "Dismiss Warnings" if you are sure to proceed.\n\nThe below Report Key Questions haven't been mapped.\n\n${emptyReportQuestions.join("\n\n")}`)
+  var addWarningIcon = function(elementId, add) {
+    var attention = ' <i id="map-warning" class="fa fa-exclamation-triangle"></i>';
+    var link = $(elementId);
+    var label = link.html();
+    var newLabel = label.replace(attention, '');
+    if (add == true) {
+      link.html(newLabel + attention);
     } else {
-      $('#panel-3-label').html("Purpose and Key Questions");
+      link.html(newLabel);
     }
+  };
 
-    if (emptySrdrQuestions.length === 0 && emptyReportQuestions.length === 0) {
-      if (withWarning) alert("No missing mappings detected!");
-    }
+  var appendMissingKQs = function(title, questions) {
+    $('#missing-mappings').append($(`<br />`))
+    $('#missing-mappings').append($(`<h5>${title}</h5>`))
+    questions.forEach(function(el, index) {
+      $('#missing-mappings').append($(`<br />`));
+      $('#missing-mappings').append($(`<div>${el}</div>`));
+    })
+  }
+
+  var reportMissingKqs = function() {
+    var mappings = checkMapping();
+    var emptyReportQuestions = mappings.emptyReportQuestions;
+    var emptySrdrQuestions = mappings.emptySrdrQuestions;
+
+    addWarningIcon('#panel-3-label', emptyReportQuestions.length > 0);
+    addWarningIcon('#panel-4-label', emptySrdrQuestions.length > 0);
   }
 
   var dismissWarnings = function() {
@@ -448,7 +531,86 @@ javascript:
     })
     clickToRemove();
   }
+
+  var check = function(panelNumber, status) {
+    var check = ' <i id="map-warning" class="fa fa-check"></i>';
+    var link = $(`#panel-${panelNumber}-label`);
+    var label = link.html();
+    var newLabel = label.replace(check, '');
+    if (status === true || status === 'true') {
+      newLabel = newLabel + check;
+      link.css({ 'color': 'green' });
+    } else {
+      link.css({ 'color': 'unset' });
+    }
+    link.html(newLabel);
+  }
+
+  var updateSectionFlag = function(domEl) {
+    var sectionId = domEl.id[0];
+    var sd_meta_datum_id = $(domEl).attr('data-sd_meta_datum_id');
+    var status = domEl.checked;
+    var paramKey = `section_flag_${sectionId}`;
+    $.post(`/sd_meta_data/${sd_meta_datum_id}/section_update`,
+      { sd_meta_datum: { [paramKey]: status } },
+      function( data ) { check(sectionId, data.status); }
+    );
+  }
+
+  $('.switch-input').on('click', function() {
+    if (this.id[0] != 4) { updateSectionFlag(this); }
+  });
+
+  $('#4-yes-no-section').on('click', function() {
+    reportMissingKqs();
+    var sectionId = this.id[0];
+    var mappings = checkMapping();
+    var emptyReportQuestions = mappings.emptyReportQuestions;
+    var emptySrdrQuestions = mappings.emptySrdrQuestions;
+    var anyMissingKqs = emptyReportQuestions.length > 0 || emptySrdrQuestions.length > 0;
+
+    if (this.checked == false) {
+      updateSectionFlag(this);
+    } else if (anyMissingKqs && this.checked) {
+      if (confirm('There are still some Key Questions that have not been mapped.  You may press OK to mark this section finished anyway.')) {
+        updateSectionFlag(this);
+      } else {
+        this.checked = false;
+      }
+    } else {
+      updateSectionFlag(this);
+    }
+  });
+
+  var initializeSwitches = function() {
+    if ("#{@sd_meta_datum.section_flag_0}" === 'true') {
+      $('#0-yes-no-section')[0].checked = true;
+      check(0, true)
+    }
+    if ("#{@sd_meta_datum.section_flag_1}" === 'true') {
+      $('#1-yes-no-section')[0].checked = true;
+      check(1, true)
+    }
+    if ("#{@sd_meta_datum.section_flag_2}" === 'true') {
+      $('#2-yes-no-section')[0].checked = true;
+      check(2, true)
+    }
+    if ("#{@sd_meta_datum.section_flag_3}" === 'true') {
+      $('#3-yes-no-section')[0].checked = true;
+      check(3, true)
+    }
+    if ("#{@sd_meta_datum.section_flag_4}" === 'true') {
+      $('#4-yes-no-section')[0].checked = true;
+      check(4, true)
+    }
+    if ("#{@sd_meta_datum.section_flag_5}" === 'true') {
+      $('#5-yes-no-section')[0].checked = true;
+      check(5, true)
+    }
+  };
+
   $( document ).ready(function() {
     initialize();
-    setTimeout(function(){ checkMapping(); }, 500);
+    setTimeout(function(){ initializeSwitches(); }, 500);
+    setTimeout(function(){ reportMissingKqs(); }, 500);
   });

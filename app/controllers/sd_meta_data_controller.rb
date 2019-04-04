@@ -1,4 +1,10 @@
 class SdMetaDataController < ApplicationController
+  def section_update
+    sd_meta_datum = SdMetaDatum.find(params[:sd_meta_datum_id])
+    sd_meta_datum.update(section_params)
+    render json: { status: section_params.values.first }, status: 200
+  end
+
   def new
     @project = SRDR::Project.find(params[:project_id])
     @sd_meta_datum = SdMetaDatum.new
@@ -54,48 +60,61 @@ class SdMetaDataController < ApplicationController
   end
 
   private
+    def section_params
+      params.
+        require(:sd_meta_datum).
+          permit(
+            :section_flag_0,
+            :section_flag_1,
+            :section_flag_2,
+            :section_flag_3,
+            :section_flag_4,
+            :section_flag_5,
+            )
+    end
+
     def sd_meta_datum_params
       params.
         require(:sd_meta_datum).
-        permit(
-          :project_id,
-          :report_title,
-          { funding_source_ids: [] },
-          :date_of_last_search,
-          :date_of_publication_full_report,
-          :state,
-          :stakeholder_involvement_extent,
-          :authors_conflict_of_interest_of_full_report,
-          :stakeholders_conflict_of_interest,
-          :prototcol_link,
-          :full_report_link,
-          :structured_abstract_link,
-          :key_messages_link,
-          :abstract_summary_link,
-          :evidence_summary_link,
-          :evs_introduction_link,
-          :evs_methods_link,
-          :evs_results_link,
-          :evs_discussion_link,
-          :evs_conclusions_link,
-          :evs_tables_figures_link,
-          { sd_journal_article_urls_attributes: [:id, :name, :_destroy, :id] },
-          { sd_other_items_attributes: [:id, :name, :url, :_destroy, :id] },
-          :disposition_of_comments_link,
-          :srdr_data_link,
-          :most_previous_version_srdr_link,
-          :most_previous_version_full_report_link,
-          :overall_purpose_of_review,
-          :type_of_review,
-          :level_of_analysis,
-          { sd_analytic_frameworks_attributes: [:id, :name, :_destroy, :id, pictures: []] },
-          { sd_key_questions_attributes: [:key_question_id, { key_question_type_ids: [] }, :name, :_destroy, :id, { sd_key_questions_key_question_type_ids: [] }] },
-          { sd_key_question_ids: [] },
-          { sd_picods_attributes: [:sd_key_questions, :p_type, :name, :_destroy, :id] },
-          { sd_search_strategies_attributes: [:sd_search_database_id, :date_of_search, :search_limits, :search_terms, :_destroy, :id] },
-          { sd_grey_literature_searches_attributes: [:name, :_destroy, :id] },
-          { sd_prisma_flows_attributes: [:name, :_destroy, :id, pictures: []] },
-          { sd_summary_of_evidences_attributes: [:sd_key_question, :soe_type, :name, :_destroy, :id] }
-        )
+          permit(
+            :project_id,
+            :report_title,
+            { funding_source_ids: [] },
+            :date_of_last_search,
+            :date_of_publication_full_report,
+            :state,
+            :stakeholder_involvement_extent,
+            :authors_conflict_of_interest_of_full_report,
+            :stakeholders_conflict_of_interest,
+            :prototcol_link,
+            :full_report_link,
+            :structured_abstract_link,
+            :key_messages_link,
+            :abstract_summary_link,
+            :evidence_summary_link,
+            :evs_introduction_link,
+            :evs_methods_link,
+            :evs_results_link,
+            :evs_discussion_link,
+            :evs_conclusions_link,
+            :evs_tables_figures_link,
+            { sd_journal_article_urls_attributes: [:id, :name, :_destroy, :id] },
+            { sd_other_items_attributes: [:id, :name, :url, :_destroy, :id] },
+            :disposition_of_comments_link,
+            :srdr_data_link,
+            :most_previous_version_srdr_link,
+            :most_previous_version_full_report_link,
+            :overall_purpose_of_review,
+            :type_of_review,
+            :level_of_analysis,
+            { sd_analytic_frameworks_attributes: [:id, :name, :_destroy, :id, pictures: []] },
+            { sd_key_questions_attributes: [:key_question_id, { key_question_type_ids: [] }, :name, :_destroy, :id, { sd_key_questions_key_question_type_ids: [] }] },
+            { sd_key_question_ids: [] },
+            { sd_picods_attributes: [:sd_key_questions, :p_type, :name, :_destroy, :id] },
+            { sd_search_strategies_attributes: [:sd_search_database_id, :date_of_search, :search_limits, :search_terms, :_destroy, :id] },
+            { sd_grey_literature_searches_attributes: [:name, :_destroy, :id] },
+            { sd_prisma_flows_attributes: [:name, :_destroy, :id, pictures: []] },
+            { sd_summary_of_evidences_attributes: [:sd_key_question, :soe_type, :name, :_destroy, :id] }
+          )
     end
 end
