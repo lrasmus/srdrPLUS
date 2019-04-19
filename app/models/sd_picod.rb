@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: sd_picods
+#
+#  id               :integer          not null, primary key
+#  sd_meta_datum_id :integer
+#  name             :text(65535)
+#  p_type           :string(255)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 class SdPicod < ApplicationRecord
   has_many_attached :pictures
 

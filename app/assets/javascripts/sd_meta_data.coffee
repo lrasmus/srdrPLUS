@@ -52,15 +52,11 @@ document.addEventListener 'turbolinks:load', ->
     init_select2(".sd_search_database", '/sd_search_databases')
     init_select2(".key_question", '/key_questions')
     init_select2(".key_question_type", '/key_question_types')
-    $( ".sd_picods_key_question" ).select2()
-    $( ".sd_picods_type" ).select2()
 
     $( "form" ).on "cocoon:after-insert", (_, row) ->
       init_select2($( row ).find( ".sd_search_database" ), '/sd_search_databases')
       init_select2($( row ).find( ".key_question" ), '/key_questions')
       init_select2($( row ).find( ".key_question_type" ), '/key_question_types')
-      $( ".sd_picods_key_question" ).select2()
-      $( ".sd_picods_type" ).select2()
 
     $( "a[data-remote]" ).on "ajax:success",  ( event ) ->
       $( this ).parent().closest( 'div' ).fadeOut();

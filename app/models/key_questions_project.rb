@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: key_questions_projects
+#
+#  id                                   :integer          not null, primary key
+#  extraction_forms_projects_section_id :integer
+#  key_question_id                      :integer
+#  project_id                           :integer
+#  deleted_at                           :datetime
+#  active                               :boolean
+#  created_at                           :datetime         not null
+#  updated_at                           :datetime         not null
+#
+
 class KeyQuestionsProject < ApplicationRecord
   include SharedParanoiaMethods
   include SharedOrderableMethods
@@ -9,7 +23,7 @@ class KeyQuestionsProject < ApplicationRecord
 
   belongs_to :extraction_forms_projects_section, inverse_of: :key_questions_projects, optional: true
   belongs_to :key_question,                      inverse_of: :key_questions_projects
-  belongs_to :project,                           inverse_of: :key_questions_projects, touch: true, class_name: 'SRDR::KeyQuestion'
+  belongs_to :project,                           inverse_of: :key_questions_projects, touch: true
 
   has_one :ordering, as: :orderable, dependent: :destroy
 
@@ -18,8 +32,6 @@ class KeyQuestionsProject < ApplicationRecord
 
   has_many :sd_key_questions_projects, inverse_of: :key_questions_project
   has_many :sd_key_questions, through: :sd_key_questions_projects
-
-  belongs_to :key_question_type, inverse_of: :key_questions_projects
 
   delegate :extraction_forms_project, to: :extraction_forms_projects_section
   delegate :extraction_form, to: :extraction_forms_project

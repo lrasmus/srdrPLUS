@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: key_questions
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  deleted_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class KeyQuestion < ApplicationRecord
   include SharedSuggestableMethods
   include SharedQueryableMethods

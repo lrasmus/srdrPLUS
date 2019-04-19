@@ -1,0 +1,36 @@
+.grid-x.align-center style="font-size: small !important;"
+  .cell.medium-2
+    #vertical-tabs.ul.tabs.vertical data-tabs=''
+      li.tabs-title.is-active
+        = link_to 'Title, Funding Sources, and Dates', '#panel-0'
+      li.tabs-title
+        = link_to 'Authors and Stakeholders', '#panel-1'
+      li.tabs-title
+        = link_to 'Links', '#panel-2'
+      li.tabs-title
+        = link_to "Purpose and Key Questions", '#panel-3'
+      li.tabs-title
+        = link_to 'Mapping Key Questions (Submitter Only)', '#panel-4'
+      li.tabs-title
+        = link_to 'Search Strategy & Summary of Results', '#panel-5'
+  .cell.medium-10
+    = simple_form_for(@sd_meta_datum, url: @url, html: { id: 'sd-meta-form', class: "grid-form", data: { 'abide': '', 'live-validate': true } }) do |f|
+      .tabs-content.vertical data-tabs-content='vertical-tabs'
+        #panel-0.tabs-panel.is-active
+          = render partial: "sd_meta_data/form/panel_0", locals: { f: f, sd_meta_datum: @sd_meta_datum, project: @project, url: @url }
+        #panel-1.tabs-panel
+          = render partial: "sd_meta_data/form/panel_1", locals: { f: f, sd_meta_datum: @sd_meta_datum, project: @project, url: @url }
+        #panel-2.tabs-panel
+          = render partial: "sd_meta_data/form/panel_2", locals: { f: f, sd_meta_datum: @sd_meta_datum, project: @project, url: @url }
+        #panel-3.tabs-panel
+          = render partial: "sd_meta_data/form/panel_3", locals: { f: f, sd_meta_datum: @sd_meta_datum, project: @project, url: @url }
+        #panel-4.tabs-panel
+          = render partial: "sd_meta_data/form/panel_4", locals: { f: f, sd_meta_datum: @sd_meta_datum, project: @project, url: @url }
+        #panel-5.tabs-panel
+          = render partial: "sd_meta_data/form/panel_5", locals: { f: f, sd_meta_datum: @sd_meta_datum, project: @project, url: @url }
+      br/
+      .form-actions
+        = f.error_notification
+        = f.button :submit, value: "Save Data", id: 'submit-button'
+.column.row
+= link_to 'Back', sd_meta_data_path

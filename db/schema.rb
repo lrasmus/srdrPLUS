@@ -628,7 +628,6 @@ ActiveRecord::Schema.define(version: 2019_04_04_102451) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "key_question_type_id"
     t.index ["active"], name: "index_key_questions_projects_on_active"
     t.index ["deleted_at"], name: "index_key_questions_projects_on_deleted_at"
     t.index ["extraction_forms_projects_section_id", "key_question_id", "project_id", "active"], name: "index_kqp_on_efps_id_kq_id_p_id_active"
@@ -637,7 +636,6 @@ ActiveRecord::Schema.define(version: 2019_04_04_102451) do
     t.index ["key_question_id", "project_id", "active"], name: "index_kqp_on_kq_id_p_id_active"
     t.index ["key_question_id", "project_id", "deleted_at"], name: "index_kqp_on_kq_id_p_id_deleted_at"
     t.index ["key_question_id"], name: "index_kqp_on_kq_id"
-    t.index ["key_question_type_id"], name: "index_key_questions_projects_on_key_question_type_id"
     t.index ["project_id"], name: "index_kqp_on_p_id"
   end
 
@@ -1604,7 +1602,6 @@ ActiveRecord::Schema.define(version: 2019_04_04_102451) do
   add_foreign_key "funding_sources_sd_meta_data", "sd_meta_data"
   add_foreign_key "journals", "citations"
   add_foreign_key "key_questions_projects", "extraction_forms_projects_sections"
-  add_foreign_key "key_questions_projects", "key_question_types"
   add_foreign_key "key_questions_projects", "key_questions"
   add_foreign_key "key_questions_projects", "projects"
   add_foreign_key "key_questions_projects_questions", "key_questions_projects"

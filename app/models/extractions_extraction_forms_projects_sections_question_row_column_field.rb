@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: eefps_qrcfs
+#
+#  id                                                      :integer          not null, primary key
+#  extractions_extraction_forms_projects_sections_type1_id :integer
+#  extractions_extraction_forms_projects_section_id        :integer
+#  question_row_column_field_id                            :integer
+#  name                                                    :text(65535)
+#  deleted_at                                              :datetime
+#  active                                                  :boolean
+#  created_at                                              :datetime         not null
+#  updated_at                                              :datetime         not null
+#
+
 class ExtractionsExtractionFormsProjectsSectionsQuestionRowColumnField < ApplicationRecord
   include SharedParanoiaMethods
   include SharedProcessTokenMethods

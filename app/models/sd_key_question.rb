@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: sd_key_questions
+#
+#  id                 :integer          not null, primary key
+#  sd_meta_datum_id   :integer
+#  sd_key_question_id :integer
+#  key_question_id    :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+
 class SdKeyQuestion < ApplicationRecord
   include SharedProcessTokenMethods
 
@@ -12,7 +24,10 @@ class SdKeyQuestion < ApplicationRecord
   has_many :sd_key_questions, inverse_of: :sd_key_question
 
   has_many :sd_key_questions_projects, inverse_of: :sd_key_question
-  # has_many :srdr_projects, through: :sd_key_questions_projects
+  # has_many :srdr_key_questions, through: :sd_key_questions_projects
+  def srdr_key_questions
+    SdKeyQuestionsProject.where(sd_key_question_id: self.id).map(&:srdr_key_question)
+  end
 
   has_many :sd_key_questions_sd_picods, inverse_of: :sd_key_question
   has_many :sd_picods, through: :sd_key_questions_sd_picods

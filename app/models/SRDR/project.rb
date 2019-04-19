@@ -1,3 +1,28 @@
+# == Schema Information
+#
+# Table name: projects
+#
+#  id                       :integer          not null, primary key
+#  title                    :string(255)
+#  description              :text(65535)
+#  notes                    :text(65535)
+#  funding_source           :string(510)
+#  creator_id               :integer
+#  is_public                :boolean          default(FALSE)
+#  created_at               :datetime
+#  updated_at               :datetime
+#  contributors             :text(65535)
+#  methodology              :text(65535)
+#  prospero_id              :string(255)
+#  search_strategy_filepath :string(255)
+#  public_downloadable      :boolean          default(FALSE)
+#  publication_requested_at :datetime
+#  parent_id                :integer
+#  attribution              :text(65535)
+#  doi_id                   :string(255)
+#  management_file_url      :string(255)
+#
+
 module SRDR
   class Project < DbSrdr
     has_many :sd_meta_data, inverse_of: :project

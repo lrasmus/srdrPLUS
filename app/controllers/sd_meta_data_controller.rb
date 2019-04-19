@@ -1,17 +1,25 @@
 class SdMetaDataController < ApplicationController
+  def mapping_update
+    key_questions = mapping_params[:key_questions] || []
+    SdKeyQuestionsProject.
+      where(sd_key_question_id: SdMetaDatum.
+      find(params[:sd_meta_datum_id]).
+      sd_key_questions).
+      destroy_all
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
+    key_questions.keys.each do |kq_project_id|
+      key_questions[kq_project_id].each do |sd_kq_id|
+        SdKeyQuestionsProject.create(key_questions_project_id: kq_project_id, sd_key_question_id: sd_kq_id)
+      end
+    end
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
+    head :no_content
+  end
+
   def section_update
     sd_meta_datum = SdMetaDatum.find(params[:sd_meta_datum_id])
     sd_meta_datum.update(section_params)
     render json: { status: section_params.values.first }, status: 200
-  end
-
-  def new
-    @project = SRDR::Project.find(params[:project_id])
-    @sd_meta_datum = SdMetaDatum.new
-    @url = project_sd_meta_data_path
-  end
-
-  def show
   end
 
   def destroy
@@ -27,30 +35,31 @@ class SdMetaDataController < ApplicationController
 
   def create
     @sd_meta_datum = SdMetaDatum.create(project_id: params[:project_id])
+    @sd_meta_datum.create_fuzzy_matches
     flash[:notice] = "Succesfully created Sd Meta Datum ID: #{@sd_meta_datum.id} for Project ID: #{@sd_meta_datum.project_id}"
     redirect_to edit_sd_meta_datum_path(@sd_meta_datum.id)
   end
 
   def edit
+    @form_number = params[:form_number] ? params[:form_number] : 0
     @sd_meta_datum = SdMetaDatum.find(params[:id])
     @project = SRDR::Project.find(@sd_meta_datum.project_id)
     @url = sd_meta_datum_path(@sd_meta_datum)
   end
 
   def update
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
     @sd_meta_datum = SdMetaDatum.find(params[:id])
     @project = SRDR::Project.find(@sd_meta_datum.project_id)
     @url = sd_meta_datum_path(@sd_meta_datum)
     sd_meta_datum = SdMetaDatum.find(params[:id])
     updated = sd_meta_datum.update!(sd_meta_datum_params)
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
 
-    if params[:commit].present?
-      updated ?
-        flash[:notice] = "Succesfully updated Sd Meta Datum ID: #{sd_meta_datum.id}" :
-        flash[:alert] = "Error updating Sd Meta Datum ID: #{sd_meta_datum.id}"
-      redirect_to sd_meta_data_path
-    else
+    if request.xhr?
       head :no_content
+    else
+      redirect_to sd_meta_data_path
     end
   end
 
@@ -60,6 +69,12 @@ class SdMetaDataController < ApplicationController
   end
 
   private
+    def mapping_params
+      params.
+        require(:sd_meta_datum).
+          permit(:_, key_questions: { })
+    end
+
     def section_params
       params.
         require(:sd_meta_datum).

@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: sd_search_databases
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class SdSearchDatabase < ApplicationRecord
   include SharedQueryableMethods
 

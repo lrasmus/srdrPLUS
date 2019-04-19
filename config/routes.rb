@@ -95,6 +95,7 @@ Rails.application.routes.draw do
 
   resources :sd_meta_data, only: [:index] do
     post 'section_update'
+    post 'mapping_update'
   end
 
   get 'sd_key_questions/:id/fuzzy_match', to: 'sd_key_questions#fuzzy_match'
