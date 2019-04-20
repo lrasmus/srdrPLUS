@@ -41,7 +41,7 @@ javascript:
     }
   };
 
-  $( document ).ready(function() {
+  $( document ).on("turbolinks:load", function() {
     setTimeout(function(){ initializeSwitches(); }, 500);
   });
 
@@ -49,10 +49,30 @@ javascript:
     var data = $('#sd-meta-form').serialize();
 
     $.ajax({
-      type: "POST",
-      url: "/sd_meta_data/2",
+      type: "PATCH",
+      url: `${$('#sd-meta-form')[0].action}`,
       data: data
     });
   }
 
-  window.submit_form = submit_form;
+  $(document).on('select2:select', 'select.key_question', function (e) {
+    submit_form();
+  });
+
+  $(document).on('confirm:complete', function (e) {
+    if (e.target.getAttribute('data-remove-key-question') === 'true') {
+      var removedKeyQuestion = $(`#${e.target.parentElement.children[0].children[1].id} option:selected`).text()
+      if (e.detail[0]) {
+        $("div").filter(function() {
+          if ($(this).hasClass('droppable') && $(this).text() === removedKeyQuestion) {
+            this.remove();
+            setTimeout(function() { submit_form(); }, 400)
+          }
+        })
+      }
+    }
+  });
+
+  $(document).on('click', "a[data-association='sd_key_question']", function (e) {
+    submit_form();
+  })

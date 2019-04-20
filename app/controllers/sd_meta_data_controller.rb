@@ -1,18 +1,19 @@
 class SdMetaDataController < ApplicationController
+  around_action :wrap_in_transaction
+
   def mapping_update
-    key_questions = mapping_params[:key_questions] || []
+    key_questions = mapping_params[:key_questions] || {}
     SdKeyQuestionsProject.
       where(sd_key_question_id: SdMetaDatum.
       find(params[:sd_meta_datum_id]).
       sd_key_questions).
       destroy_all
-    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
+
     key_questions.keys.each do |kq_project_id|
       key_questions[kq_project_id].each do |sd_kq_id|
         SdKeyQuestionsProject.create(key_questions_project_id: kq_project_id, sd_key_question_id: sd_kq_id)
       end
     end
-    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
     head :no_content
   end
 
@@ -27,7 +28,6 @@ class SdMetaDataController < ApplicationController
     if sd_meta_datum.destroyed?
       flash[:notice] = "Succesfully deleted Sd Meta Datum ID: #{sd_meta_datum.id}"
       redirect_to sd_meta_data_path
-    else
       flash[:alert] = "Error deleting Sd Meta Datum ID: #{sd_meta_datum.id}"
       redirect_to sd_meta_data_path
     end
@@ -41,25 +41,26 @@ class SdMetaDataController < ApplicationController
   end
 
   def edit
-    @form_number = params[:form_number] ? params[:form_number] : 0
     @sd_meta_datum = SdMetaDatum.find(params[:id])
     @project = SRDR::Project.find(@sd_meta_datum.project_id)
     @url = sd_meta_datum_path(@sd_meta_datum)
   end
 
   def update
-    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
     @sd_meta_datum = SdMetaDatum.find(params[:id])
     @project = SRDR::Project.find(@sd_meta_datum.project_id)
     @url = sd_meta_datum_path(@sd_meta_datum)
     sd_meta_datum = SdMetaDatum.find(params[:id])
-    updated = sd_meta_datum.update!(sd_meta_datum_params)
-    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
-
+    update = sd_meta_datum.update(sd_meta_datum_params)
+  ensure
     if request.xhr?
       head :no_content
     else
-      redirect_to sd_meta_data_path
+      if update
+        redirect_to sd_meta_data_path
+      else
+        render :edit
+      end
     end
   end
 
@@ -69,6 +70,18 @@ class SdMetaDataController < ApplicationController
   end
 
   private
+
+    def wrap_in_transaction
+      ActiveRecord::Base.transaction do
+        begin
+          ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
+          yield
+        ensure
+          ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
+        end
+      end
+    end
+
     def mapping_params
       params.
         require(:sd_meta_datum).

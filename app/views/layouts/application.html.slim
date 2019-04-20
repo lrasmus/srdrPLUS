@@ -6,6 +6,8 @@ html class='no-js' lang='en'
 
     title == content_for?(:title) ? yield(:title) : 'srdrPLUS'
 
+    = stylesheet_link_tag    'application', 'data-turbolinks-track' => 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload'
     /= stylesheet_link_tag    params[:controller], media: 'all', 'data-turbolinks-track': 'reload'
     /= javascript_include_tag params[:controller], 'data-turbolinks-track': 'reload'
     = csrf_meta_tag
@@ -37,6 +39,3 @@ html class='no-js' lang='en'
 
     iframe src="/ahrq_footer.html" text="AHRQ Footer" title="AHRQ Footer" height="350" width="100%" frameborder="0" scrolling="no" seemless
       p Browser does not support iframes. Please update your browser to for a better viewing experience.
-
-  = stylesheet_link_tag    'application', 'data-turbolinks-track' => 'reload'
-  = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload'

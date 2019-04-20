@@ -14,30 +14,17 @@ javascript:
     })
   }
 
-  var clickToRemove = function() {
-    $('.clickremove').on('click', function(ev) {
-      ev.target.remove();
-      var mappings = checkMapping();
-      var emptyReportQuestions = mappings.emptyReportQuestions;
-      var emptySrdrQuestions = mappings.emptySrdrQuestions;
-      if (emptyReportQuestions.length > 0 || emptySrdrQuestions.length > 0) {
-        $('#4-yes-no-section')[0].checked = false;
-        updateSectionFlag($('#4-yes-no-section')[0]);
-      }
-      colorCode();
-    })
-  };
-
-  $(document).on('confirm:complete', function (e, answer) {
-    var removedKeyQuestion = $(`#${e.target.parentElement.children[0].children[1].id} option:selected`).text()
-    if (answer) {
-      $("div").filter(function() {
-        if ($(this).hasClass('droppable') && $(this).text() === removedKeyQuestion) {
-          this.remove();
-        }
-      })
+  $(document).on('click', '.clickremove', function(ev) {
+    ev.target.remove();
+    var mappings = checkMapping();
+    var emptyReportQuestions = mappings.emptyReportQuestions;
+    var emptySrdrQuestions = mappings.emptySrdrQuestions;
+    if (emptyReportQuestions.length > 0 || emptySrdrQuestions.length > 0) {
+      $('#4-yes-no-section')[0].checked = false;
+      updateSectionFlag($('#4-yes-no-section')[0]);
     }
-  });
+    colorCode();
+  })
 
   var extractReportQuestions = function() {
     var hash = {};
@@ -94,7 +81,6 @@ javascript:
         var newNode = $( `<div id="srdr_kq-${data.id}" data-keyQuestionId="${data.id}" draggable="true" class="draggable clickremove">${data.name} - (click to remove)</div>` );
         parentNode.append(newNode);
         colorCode();
-        clickToRemove();
       }
     });
   };
@@ -171,17 +157,17 @@ javascript:
     $('.draggable').each(function() {
       colorCode();
     })
-    $('.draggable').on('dragend', function(ev) {
+    $(document).on('dragend', '.draggable', function(ev) {
       colorCode();
     })
-    $('.draggable').on('dragstart', function(ev) {
+    $(document).on('dragstart', '.draggable', function(ev) {
       ev.dataTransfer.setData("text/plain", ev.target.id);
     })
-    $('.droppable').on('dragleave', function(ev) {
+    $(document).on('dragleave', '.droppable', function(ev) {
       ev.preventDefault();
       ev.currentTarget.style.background = "aliceblue";
     })
-    $('.droppable').on('dragover', function(ev) {
+    $(document).on('dragover', '.droppable', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
       if (ev.target.getAttribute("draggable") == "true") {
@@ -191,7 +177,7 @@ javascript:
         ev.dataTransfer.dropEffect = "copy";
       }
     })
-    $('.droppable').on('drop', function(ev) {
+    $(document).on('drop', '.droppable', function(ev) {
       ev.preventDefault();
       ev.currentTarget.style.background = "aliceblue";
       var data = ev.dataTransfer.getData("text/plain");
@@ -201,9 +187,7 @@ javascript:
       $(nodeCopy).addClass('disableselect');
       $(nodeCopy).addClass('clickremove');
       ev.target.appendChild(nodeCopy);
-      clickToRemove();
     })
-    clickToRemove();
     colorCode();
   }
 
@@ -221,7 +205,7 @@ javascript:
     link.html(newLabel);
   }
 
-  $('#4-yes-no-section').on('click', function() {
+  $(document).on('click', '#4-yes-no-section', function() {
     reportMissingKqs();
     var sectionId = this.id[0];
     var mappings = checkMapping();
@@ -242,11 +226,28 @@ javascript:
     }
   });
 
-  $('#submit-button').on('click', function() {
+  $(document).on('click', '#submit-button', function() {
     postMappings();
   })
 
-  $( document ).ready(function() {
+  $(document).on('DOMSubtreeModified', "#panel-4", function() {
+    colorCode();
+  });
+
+  $(document).on("turbolinks:load", function() {
     initialize();
     setTimeout(function(){ reportMissingKqs(); }, 500);
   });
+
+  // $(document).on('confirm:complete', function (e) {
+  //   if (e.target.getAttribute('data-remove-key-question') === 'true') {
+  //     var removedKeyQuestion = $(`#${e.target.parentElement.children[0].children[1].id} option:selected`).text()
+  //     if (e.detail[0]) {
+  //       $("div").filter(function() {
+  //         if ($(this).hasClass('droppable') && $(this).text() === removedKeyQuestion) {
+  //           this.remove();
+  //         }
+  //       })
+  //     }
+  //   }
+  // });

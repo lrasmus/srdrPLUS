@@ -84,45 +84,96 @@ class SdMetaDatum < ApplicationRecord
   accepts_nested_attributes_for :sd_summary_of_evidences, allow_destroy: true
   accepts_nested_attributes_for :sd_prisma_flows, allow_destroy: true
 
-  def sd_picods_attributes=(attr)
+  def sd_key_questions_attributes=(attr)
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
+    deleted_keys = []
     attr.each do |idx, payload|
-      sd_key_question = SdKeyQuestion.includes(:key_question).where(sd_meta_datum: self).find { |sd_kq| sd_kq.key_question.name == payload[:sd_key_questions] }
-      sd_picod = SdPicod.find_or_create_by!(
-        name: payload[:name],
-        p_type: payload[:p_type],
-        sd_meta_datum_id: self.id
-      )
+      if payload[:_destroy] == '1'
+        SdKeyQuestion.find_by(id: payload[:id]).try(:destroy)
+        deleted_keys << idx
+      end
+    end
+    deleted_keys.each { |key| attr.delete(key) }
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
+    super
+  end
+
+  def sd_picods_attributes=(attr)
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
+
+    attr.each do |idx, payload|
+      next if payload[:sd_key_questions].blank?
+      sd_key_question = SdKeyQuestion.
+        includes(:key_question).where(sd_meta_datum: self).
+        find { |sd_kq| sd_kq.key_question.name == payload[:sd_key_questions] }
+
+      if payload[:_destroy] == '1'
+        sd_picod = SdPicod.find(payload[:id])
+
+        if sd_key_question && sd_picod
+          sd_key_questions_sd_picod = SdKeyQuestionsSdPicod.find_by(
+            sd_key_question_id: sd_key_question.id,
+            sd_picod_id: sd_picod.id
+          ).try(:destroy)
+        end
+        sd_picod.destroy
+        next
+      end
+
+      if payload[:id]
+        sd_picod = SdPicod.find(payload[:id])
+        sd_picod.update!(
+          name: payload[:name],
+          p_type: payload[:p_type],
+          sd_meta_datum_id: self.id
+        )
+      else
+        sd_picod = SdPicod.create!(
+          name: payload[:name],
+          p_type: payload[:p_type],
+          sd_meta_datum_id: self.id
+        )
+      end
+
       sd_key_questions_sd_picod = SdKeyQuestionsSdPicod.find_or_create_by!(
         sd_key_question_id: sd_key_question.id,
         sd_picod_id: sd_picod.id
       )
-      if payload[:_destroy] == '1'
-        ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
-        sd_picod.destroy
-        sd_key_questions_sd_picod.destroy
-        ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
-      end
     end
+
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
   end
 
   def sd_summary_of_evidences_attributes=(attr)
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
+
     attr.each do |idx, payload|
+      next if payload[:sd_key_question].blank?
+      if payload[:_destroy] == '1'
+        SdSummaryOfEvidence.find(payload[:id]).destroy
+        next
+      end
 
       sd_key_question = SdKeyQuestion.includes(:key_question).where(sd_meta_datum: self).find { |sd_kq| sd_kq.key_question.name == payload[:sd_key_question] }
-
-      sd_key_questions_sd_soe = SdSummaryOfEvidence.find_or_create_by!(
-        name: payload[:name],
-        soe_type: payload[:p_type],
-        sd_meta_datum_id: self.id,
-        sd_key_question: sd_key_question
-      )
-
-      if payload[:_destroy] == '1'
-        ActiveRecord::Base.connection.execute('SET foreign_key_checks = 0;')
-        sd_key_questions_sd_soe.destroy
-        ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
+      if payload[:id]
+        sd_key_questions_sd_soe = SdSummaryOfEvidence.find(payload[:id])
+        sd_key_questions_sd_soe.update!(
+          sd_meta_datum_id: self.id,
+          sd_key_question: sd_key_question,
+          soe_type: payload[:soe_type],
+          name: payload[:name]
+        )
+      else
+        sd_key_questions_sd_soe = SdSummaryOfEvidence.create!(
+          sd_meta_datum_id: self.id,
+          sd_key_question: sd_key_question,
+          soe_type: payload[:soe_type],
+          name: payload[:name]
+        )
       end
     end
+
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks = 1;')
   end
 
   def s_kqs
