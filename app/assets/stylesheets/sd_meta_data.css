@@ -169,3 +169,7 @@
 .mapping-controls {
   margin: 0 10px;
 }
+
+.bg-light-grey {
+  background-color: lightgrey;
+}

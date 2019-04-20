@@ -20,8 +20,8 @@ javascript:
     var emptyReportQuestions = mappings.emptyReportQuestions;
     var emptySrdrQuestions = mappings.emptySrdrQuestions;
     if (emptyReportQuestions.length > 0 || emptySrdrQuestions.length > 0) {
-      $('#4-yes-no-section')[0].checked = false;
-      updateSectionFlag($('#4-yes-no-section')[0]);
+      $('#5-yes-no-section')[0].checked = false;
+      updateSectionFlag($('#5-yes-no-section')[0]);
     }
     colorCode();
   })
@@ -144,13 +144,13 @@ javascript:
     var emptyReportQuestions = mappings.emptyReportQuestions;
     var emptySrdrQuestions = mappings.emptySrdrQuestions;
 
-    addWarningIcon('#panel-3-label', emptyReportQuestions.length > 0);
-    addWarningIcon('#panel-4-label', emptySrdrQuestions.length > 0);
+    addWarningIcon('#panel-4-label', emptyReportQuestions.length > 0);
+    addWarningIcon('#panel-5-label', emptySrdrQuestions.length > 0);
   }
 
   var dismissWarnings = function() {
-    $('#panel-3-label').html("Purpose and Key Questions");
-    $('#panel-4-label').html("Mapping Key Questions (Submitter Only)");
+    $('#panel-4-label').html("Purpose and Key Questions");
+    $('#panel-5-label').html("Mapping Key Questions (Submitter Only)");
   };
 
   var initialize = function () {
@@ -191,21 +191,7 @@ javascript:
     colorCode();
   }
 
-  var check = function(panelNumber, status) {
-    var check = ' <i id="map-warning" class="fa fa-check"></i>';
-    var link = $(`#panel-${panelNumber}-label`);
-    var label = link.html();
-    var newLabel = label.replace(check, '');
-    if (status === true || status === 'true') {
-      newLabel = newLabel + check;
-      link.css({ 'color': 'green' });
-    } else {
-      link.css({ 'color': 'unset' });
-    }
-    link.html(newLabel);
-  }
-
-  $(document).on('click', '#4-yes-no-section', function() {
+  $(document).on('click', '#5-yes-no-section', function() {
     reportMissingKqs();
     var sectionId = this.id[0];
     var mappings = checkMapping();
@@ -226,28 +212,11 @@ javascript:
     }
   });
 
-  $(document).on('click', '#submit-button', function() {
+  $(document).on('DOMSubtreeModified', "div.report-key-questions-box", function() {
     postMappings();
-  })
-
-  $(document).on('DOMSubtreeModified', "#panel-4", function() {
-    colorCode();
   });
 
   $(document).on("turbolinks:load", function() {
     initialize();
     setTimeout(function(){ reportMissingKqs(); }, 500);
   });
-
-  // $(document).on('confirm:complete', function (e) {
-  //   if (e.target.getAttribute('data-remove-key-question') === 'true') {
-  //     var removedKeyQuestion = $(`#${e.target.parentElement.children[0].children[1].id} option:selected`).text()
-  //     if (e.detail[0]) {
-  //       $("div").filter(function() {
-  //         if ($(this).hasClass('droppable') && $(this).text() === removedKeyQuestion) {
-  //           this.remove();
-  //         }
-  //       })
-  //     }
-  //   }
-  // });

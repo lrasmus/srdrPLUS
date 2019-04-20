@@ -41,6 +41,7 @@ class SdMetaDataController < ApplicationController
   end
 
   def edit
+    @panel_number = params[:panel_number].try(:to_i) || 0
     @sd_meta_datum = SdMetaDatum.find(params[:id])
     @project = SRDR::Project.find(@sd_meta_datum.project_id)
     @url = sd_meta_datum_path(@sd_meta_datum)

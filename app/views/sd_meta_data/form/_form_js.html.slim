@@ -10,35 +10,45 @@ javascript:
     );
   }
 
-  $('.switch-input').on('click', function() {
+  $(document).on('click', '.switch-input', function() {
     if (this.id[0] != 4) { updateSectionFlag(this); }
   });
 
+  var check = function(panelNumber, status) {
+    var check = ' <i id="map-warning" class="fa fa-check"></i>';
+    var link = $(`#panel-${panelNumber}-label`);
+    var label = link.html();
+    var newLabel = label.replace(check, '');
+    if (status === true || status === 'true') {
+      newLabel = newLabel + check;
+      link.css({ 'color': 'green' });
+    } else {
+      link.css({ 'color': 'unset' });
+    }
+    link.html(newLabel);
+  }
+
   var initializeSwitches = function() {
-    if ("#{@sd_meta_datum.section_flag_0}" === 'true') {
-      $('#0-yes-no-section')[0].checked = true;
-      check(0, true)
-    }
-    if ("#{@sd_meta_datum.section_flag_1}" === 'true') {
-      $('#1-yes-no-section')[0].checked = true;
-      check(1, true)
-    }
-    if ("#{@sd_meta_datum.section_flag_2}" === 'true') {
-      $('#2-yes-no-section')[0].checked = true;
-      check(2, true)
-    }
-    if ("#{@sd_meta_datum.section_flag_3}" === 'true') {
-      $('#3-yes-no-section')[0].checked = true;
-      check(3, true)
-    }
-    if ("#{@sd_meta_datum.section_flag_4}" === 'true') {
-      $('#4-yes-no-section')[0].checked = true;
-      check(4, true)
-    }
-    if ("#{@sd_meta_datum.section_flag_5}" === 'true') {
-      $('#5-yes-no-section')[0].checked = true;
-      check(5, true)
-    }
+    if ("#{@sd_meta_datum.section_flag_0}" === 'true') check(0, true)
+    if ($('#0-yes-no-section')[0]) $('#0-yes-no-section')[0].checked = true;
+
+    if ("#{@sd_meta_datum.section_flag_1}" === 'true') check(1, true)
+    if ($('#1-yes-no-section')[0]) $('#1-yes-no-section')[0].checked = true;
+
+    if ("#{@sd_meta_datum.section_flag_2}" === 'true') check(2, true)
+    if ($('#2-yes-no-section')[0]) $('#2-yes-no-section')[0].checked = true;
+
+    if ("#{@sd_meta_datum.section_flag_3}" === 'true') check(3, true)
+    if ($('#3-yes-no-section')[0]) $('#3-yes-no-section')[0].checked = true;
+
+    if ("#{@sd_meta_datum.section_flag_4}" === 'true') check(4, true)
+    if ($('#4-yes-no-section')[0]) $('#4-yes-no-section')[0].checked = true;
+
+    if ("#{@sd_meta_datum.section_flag_5}" === 'true') check(5, true)
+    if ($('#5-yes-no-section')[0]) $('#5-yes-no-section')[0].checked = true;
+
+    if ("#{@sd_meta_datum.section_flag_6}" === 'true') check(6, true)
+    if ($('#6-yes-no-section')[0]) $('#6-yes-no-section')[0].checked = true;
   };
 
   $( document ).on("turbolinks:load", function() {
@@ -55,24 +65,7 @@ javascript:
     });
   }
 
-  $(document).on('select2:select', 'select.key_question', function (e) {
+  $(document).on('click', '#submit-button', function (e) {
+    e.preventDefault();
     submit_form();
   });
-
-  $(document).on('confirm:complete', function (e) {
-    if (e.target.getAttribute('data-remove-key-question') === 'true') {
-      var removedKeyQuestion = $(`#${e.target.parentElement.children[0].children[1].id} option:selected`).text()
-      if (e.detail[0]) {
-        $("div").filter(function() {
-          if ($(this).hasClass('droppable') && $(this).text() === removedKeyQuestion) {
-            this.remove();
-            setTimeout(function() { submit_form(); }, 400)
-          }
-        })
-      }
-    }
-  });
-
-  $(document).on('click', "a[data-association='sd_key_question']", function (e) {
-    submit_form();
-  })
