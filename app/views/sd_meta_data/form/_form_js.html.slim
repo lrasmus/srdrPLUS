@@ -30,25 +30,25 @@ javascript:
 
   var initializeSwitches = function() {
     if ("#{@sd_meta_datum.section_flag_0}" === 'true') check(0, true)
-    if ($('#0-yes-no-section')[0]) $('#0-yes-no-section')[0].checked = true;
+    if ("#{@sd_meta_datum.section_flag_0}" === 'true' && $('#0-yes-no-section')[0]) $('#0-yes-no-section')[0].checked = true;
 
     if ("#{@sd_meta_datum.section_flag_1}" === 'true') check(1, true)
-    if ($('#1-yes-no-section')[0]) $('#1-yes-no-section')[0].checked = true;
+    if ("#{@sd_meta_datum.section_flag_1}" === 'true' && $('#1-yes-no-section')[0]) $('#1-yes-no-section')[0].checked = true;
 
     if ("#{@sd_meta_datum.section_flag_2}" === 'true') check(2, true)
-    if ($('#2-yes-no-section')[0]) $('#2-yes-no-section')[0].checked = true;
+    if ("#{@sd_meta_datum.section_flag_2}" === 'true' && $('#2-yes-no-section')[0]) $('#2-yes-no-section')[0].checked = true;
 
     if ("#{@sd_meta_datum.section_flag_3}" === 'true') check(3, true)
-    if ($('#3-yes-no-section')[0]) $('#3-yes-no-section')[0].checked = true;
+    if ("#{@sd_meta_datum.section_flag_3}" === 'true' && $('#3-yes-no-section')[0]) $('#3-yes-no-section')[0].checked = true;
 
     if ("#{@sd_meta_datum.section_flag_4}" === 'true') check(4, true)
-    if ($('#4-yes-no-section')[0]) $('#4-yes-no-section')[0].checked = true;
+    if ("#{@sd_meta_datum.section_flag_4}" === 'true' && $('#4-yes-no-section')[0]) $('#4-yes-no-section')[0].checked = true;
 
     if ("#{@sd_meta_datum.section_flag_5}" === 'true') check(5, true)
-    if ($('#5-yes-no-section')[0]) $('#5-yes-no-section')[0].checked = true;
+    if ("#{@sd_meta_datum.section_flag_5}" === 'true' && $('#5-yes-no-section')[0]) $('#5-yes-no-section')[0].checked = true;
 
     if ("#{@sd_meta_datum.section_flag_6}" === 'true') check(6, true)
-    if ($('#6-yes-no-section')[0]) $('#6-yes-no-section')[0].checked = true;
+    if ("#{@sd_meta_datum.section_flag_6}" === 'true' && $('#6-yes-no-section')[0]) $('#6-yes-no-section')[0].checked = true;
   };
 
   $( document ).on("turbolinks:load", function() {
