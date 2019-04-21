@@ -55,17 +55,22 @@ javascript:
     setTimeout(function(){ initializeSwitches(); }, 500);
   });
 
-  var submit_form = function() {
+  var submit_form = function(async = true) {
     var data = $('#sd-meta-form').serialize();
 
     $.ajax({
       type: "PATCH",
       url: `${$('#sd-meta-form')[0].action}`,
-      data: data
+      data: data,
+      async: async
     });
   }
 
   $(document).on('click', '#submit-button', function (e) {
     e.preventDefault();
     submit_form();
+  });
+
+  $(window).on('beforeunload', function () {
+    submit_form(false);
   });
