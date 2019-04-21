@@ -56,21 +56,23 @@ javascript:
   });
 
   var submit_form = function(async = true) {
-    var data = $('#sd-meta-form').serialize();
+    var form = $('#sd-meta-form')[0]
+    var formData = new FormData(form);
 
     $.ajax({
       type: "PATCH",
       url: `${$('#sd-meta-form')[0].action}`,
-      data: data,
-      async: async
+      data: formData,
+      async: async,
+      contentType: false,
+      processData: false
     });
   }
 
-  $(document).on('click', '#submit-button', function (e) {
-    e.preventDefault();
-    submit_form();
+  $(window).on('beforeunload', function () {
+    submit_form(false);
   });
 
-  $(window).on('beforeunload', function () {
+  $(document).on('click', 'a', function(){
     submit_form(false);
   });

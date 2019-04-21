@@ -1,6 +1,6 @@
 .grid-x.align-center style="font-size: small !important;"
   .cell.medium-2
-    #vertical-tabs.ul.tabs.vertical data-turbolinks="false"
+    #vertical-tabs.ul.tabs.vertical
       li.tabs-title
         = link_to 'Title, Funding Sources, and Dates', '?panel_number=0', class: (@panel_number == 0 ? 'bg-light-grey' : ''), id: "panel-0-label"
       li.tabs-title
@@ -24,5 +24,4 @@
       br/
       .form-actions
         = f.error_notification
-        = f.button :submit, value: "Save Data", id: 'submit-button'
-        = link_to 'Back to SD Meta Data Dashboard', sd_meta_data_path, class: "button", style: "margin-left: 10px;"
+        = link_to 'Save & Back to SD Meta Data Dashboard', sd_meta_data_path, class: "button", style: "margin-left: 10px;"

@@ -31,13 +31,10 @@
     div data-row-span="4"
       div data-field-span="4"
         div Section Finished?
-        .switch style="float: left;"
+        .switch
           input.switch-input id="5-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
           label.switch-paddle for="5-yes-no-section"
             span.switch-active aria-hidden="true" Yes
             span.switch-inactive aria-hidden="true" No
-    div data-row-span="4"
-      div data-field-span="4"
-        div#missing-mappings
 
 = render 'sd_meta_data/form/form_mapping_js'

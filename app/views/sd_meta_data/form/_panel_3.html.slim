@@ -17,15 +17,15 @@
         = render 'sd_meta_data/form/dynamic_fields/sd_key_question_fields', f: sd_key_question
       div
         = link_to_add_association 'add', f, :sd_key_questions, partial: 'sd_meta_data/form/dynamic_fields/sd_key_question_fields'
-    br/
-    br/
+  br/
+  br/
   fieldset
     legend Section Review & Validation
     div data-row-span="1"
       div data-field-span="1"
-      div Section Finished?
-      .switch
-        input.switch-input id="3-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
-        label.switch-paddle for="3-yes-no-section"
-        span.switch-active aria-hidden="true" Yes
-        span.switch-inactive aria-hidden="true" No
+        div Section Finished?
+        .switch
+          input.switch-input id="3-yes-no-section" type="checkbox" name="sectionSection" data-sd_meta_datum_id="#{@sd_meta_datum.id}"
+          label.switch-paddle for="3-yes-no-section"
+            span.switch-active aria-hidden="true" Yes
+            span.switch-inactive aria-hidden="true" No
