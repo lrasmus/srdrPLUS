@@ -1,16 +1,23 @@
+.column.row#project-list
+  h3 Create New Project Link
+  select id="project-create"
+    - @projects.each do |project|
+      option
+      option value="#{project.id}" #{project.id}: #{project.title}
+  a.button.medium#create-new-sd-meta-datum style="margin-top: 10px;" Create
 .column.row#sdMetaData-list
-  h3 My Sd Meta Data
+  h3 My Project Links
   table.hover
     thead
       tr
-        th width="200" SD Meta Datum ID
-        th width="150" Project ID
+        th width="100" Project Link ID
+        th width="175" Project Title
+        th width="375" Incomplete Sections
         th State
-        th Incomplete Sections
-        th width="200" Toggle State
-        th width="100" Edit
-        th width="100" Delete
-        th width="150" Last Updated
+        th width="150" Toggle State
+        th width="75" Edit
+        th width="75" Delete
+        th width="75" Last Updated
     tbody
       - if @sd_meta_data.empty?
         tr
@@ -26,9 +33,11 @@
         - @sd_meta_data.each do |sd_meta_datum|
           tr
             td = sd_meta_datum.id
-            td = sd_meta_datum.project_id
+            td = sd_meta_datum.project.title
+            td
+              - sd_meta_datum.incomplete_sections.each do |section|
+                p style="margin: 10px 0px;" #{section}
             td style="font-weight: #{sd_meta_datum.state == 'DRAFT' ? 'normal' : 'bold' };" = sd_meta_datum.state
-            td = sd_meta_datum.incomplete_sections.join(", ")
             td
               = simple_form_for(sd_meta_datum, url: sd_meta_datum_path(sd_meta_datum)) do |f|
                 = f.input :state, :as => :hidden, input_html: { value: sd_meta_datum.state == 'DRAFT' ? 'COMPLETED' : 'DRAFT' }
@@ -36,12 +45,6 @@
             td = link_to "Edit", edit_sd_meta_datum_path(sd_meta_datum.id)
             td = link_to 'Destroy', sd_meta_datum_path(sd_meta_datum), data: { confirm: 'Are you sure?' }, method: :delete
             td = distance_of_time_in_words_to_now(sd_meta_datum.updated_at) + ' ago'
-.column.row#project-list
-  h3 Create New Sd Meta Datum for Project
-  select id="project-create"
-    - @projects.each do |project|
-      option value="#{project.id}" #{project.id}: #{project.title}
-  a.button.medium#create-new-sd-meta-datum style="margin-top: 10px;" Create
 
 javascript:
   $('.state-toggler').on('click', function(e) {
@@ -51,7 +54,10 @@ javascript:
     }
   })
 
-  $('#project-create').select2()
+  $('#project-create').select2({
+    placeholder: "Select a Project",
+    allowClear: true
+  })
 
   $('#create-new-sd-meta-datum').on('click', function(e) {
     var id = $('#project-create').val();

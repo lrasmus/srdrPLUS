@@ -3,9 +3,9 @@
     legend Authors and Stakeholders
     div data-row-span="1"
       div data-field-span="1"
-        label 7. Authors (To be checked: Google Scholar Data):
+        label 7. Authors
         - @project.authors.map do |user|
-          div #{user.email}
+          div #{user.fname} #{user.lname} (#{user.email})
     div data-row-span="1"
       div data-field-span="1"
         = f.input :authors_conflict_of_interest_of_full_report, label: '8. Conflicts of Interest of Authors of Full Report', :input_html => { :rows => 5 }
@@ -17,12 +17,12 @@
         = f.input :stakeholders_conflict_of_interest, label: '10. Conflicts of Interest of Stakeholders', :input_html => { :rows => 5 }
     div data-row-span="2"
       div data-field-span="1"
-        label 11. SRDR Project Creator:
-        div #{@project.creator.fname} #{@project.creator.lname} (#{@project.creator.email})
-      div data-field-span="1"
-        label 12. Project Leads:
+        label 11. Project Leads:
         - @project.leading.map do |user|
           div #{user.fname} #{user.lname} (#{user.email})
+      div data-field-span="1"
+        label 12. SRDR Project Creator:
+        div #{@project.creator.fname} #{@project.creator.lname} (#{@project.creator.email})
   br/
   br/
   fieldset

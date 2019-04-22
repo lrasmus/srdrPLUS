@@ -44,6 +44,8 @@
 class SdMetaDatum < ApplicationRecord
   include SharedProcessTokenMethods
 
+  SECTIONS = ['Title, Funding Sources, and Dates', 'Authors and Stakeholders', 'Links', 'Purpose and Key Questions', 'PICODS for each Key Question', 'Mapping Key Questions (Submitter Only)', 'Search Strategy & Summary of Results'].freeze
+
   default_scope { order(project_id: :asc) }
 
   belongs_to :project, class_name: 'SRDR::Project', inverse_of: :sd_meta_data
@@ -192,13 +194,14 @@ class SdMetaDatum < ApplicationRecord
   end
 
   def incomplete_sections
-    inc_sections = []
-    section_statuses.each_with_index { |el, idx| inc_sections << idx + 1 unless el }
-    inc_sections
+    incomplete_sections = []
+
+    section_statuses.each_with_index { |el, idx| incomplete_sections << SECTIONS[idx] unless el }
+    incomplete_sections
   end
 
   def section_statuses
-    (0..5).to_a.map do |i|
+    (0..6).to_a.map do |i|
       section = 'section_flag_' + i.to_s
       self[section]
     end

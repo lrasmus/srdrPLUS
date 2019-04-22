@@ -173,3 +173,7 @@
 .bg-light-grey {
   background-color: lightgrey;
 }
+
+li.tabs-title > a:visited {
+  color: inherit;
+}
