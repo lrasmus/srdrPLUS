@@ -144,14 +144,9 @@ javascript:
     var emptyReportQuestions = mappings.emptyReportQuestions;
     var emptySrdrQuestions = mappings.emptySrdrQuestions;
 
-    addWarningIcon('#panel-4-label', emptyReportQuestions.length > 0);
+    addWarningIcon('#panel-3-label', emptyReportQuestions.length > 0);
     addWarningIcon('#panel-5-label', emptySrdrQuestions.length > 0);
   }
-
-  var dismissWarnings = function() {
-    $('#panel-4-label').html("Purpose and Key Questions");
-    $('#panel-5-label').html("Mapping Key Questions (Submitter Only)");
-  };
 
   var initialize = function () {
     $('.draggable').each(function() {

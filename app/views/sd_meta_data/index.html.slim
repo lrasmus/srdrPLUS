@@ -38,9 +38,10 @@
             td = distance_of_time_in_words_to_now(sd_meta_datum.updated_at) + ' ago'
 .column.row#project-list
   h3 Select Report to Create New Sd Meta Data
-  - @projects.each do |project|
-    div
-      = link_to "ID#{project.id}: #{project.title}", project_sd_meta_data_path(project.id), method: :post
+  select id="project-create"
+    - @projects.each do |project|
+      option value="#{project.id}" #{project.id}: #{project.title}
+  a.button.small#create-new-sd-meta-datum Create
 
 javascript:
   $('.state-toggler').on('click', function(e) {
@@ -48,4 +49,15 @@ javascript:
       alert('There are still incomplete sections.  Please mark any incomplete sections complete first.')
       e.preventDefault();
     }
+  })
+
+  $('#project-create').select2()
+
+  $('#create-new-sd-meta-datum').on('click', function(e) {
+    var id = $('#project-create').val();
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: `/projects/${id}/sd_meta_data`
+    });
   })
