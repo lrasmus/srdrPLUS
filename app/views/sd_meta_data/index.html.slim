@@ -37,11 +37,11 @@
             td = link_to 'Destroy', sd_meta_datum_path(sd_meta_datum), data: { confirm: 'Are you sure?' }, method: :delete
             td = distance_of_time_in_words_to_now(sd_meta_datum.updated_at) + ' ago'
 .column.row#project-list
-  h3 Select Report to Create New Sd Meta Data
+  h3 Create New Sd Meta Datum for Project
   select id="project-create"
     - @projects.each do |project|
       option value="#{project.id}" #{project.id}: #{project.title}
-  a.button.small#create-new-sd-meta-datum Create
+  a.button.medium#create-new-sd-meta-datum style="margin-top: 10px;" Create
 
 javascript:
   $('.state-toggler').on('click', function(e) {
