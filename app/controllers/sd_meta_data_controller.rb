@@ -27,10 +27,10 @@ class SdMetaDataController < ApplicationController
     sd_meta_datum =  SdMetaDatum.find(params[:id]).destroy
     if sd_meta_datum.destroyed?
       flash[:notice] = "Succesfully deleted Sd Meta Datum ID: #{sd_meta_datum.id}"
-      redirect_to sd_meta_data_path
+    else
       flash[:alert] = "Error deleting Sd Meta Datum ID: #{sd_meta_datum.id}"
-      redirect_to sd_meta_data_path
     end
+    redirect_to sd_meta_data_path
   end
 
   def create
