@@ -158,9 +158,6 @@ gem 'bootsnap'
 # Access to AWS S3 Cloud Storage.
 gem "aws-sdk-s3", require: false
 
-# Access Google sheets programmatically
-gem "google-api-client"
-
 # Formatted console logs
 gem "awesome_print"
 
@@ -169,3 +166,9 @@ gem "fuzzy_match"
 
 # Font Awesome Icons
 gem "font-awesome-rails"
+
+# Access Google sheets programmatically
+gem "google-api-client"
+
+# Allows us to authenticate via Google's servers, so we can create google exports
+gem 'omniauth-google-oauth2'

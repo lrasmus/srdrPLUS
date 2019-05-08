@@ -2,14 +2,14 @@ class ProjectsController < ApplicationController
   add_breadcrumb 'my projects', :projects_path
 
   before_action :set_project, only: [
-    :show, :edit, :update, :destroy, :export, :import_csv,
+    :show, :edit, :update, :destroy, :export, :export_to_gdrive, :import_csv,
     :import_pubmed, :import_endnote, :import_ris, :next_assignment,
     :confirm_deletion, :dedupe_citations, :create_citation_screening_extraction_form, :create_full_text_screening_extraction_form
   ]
 
-  before_action :skip_authorization, only: [:index, :show, :filter, :export, :new, :create]
+  before_action :skip_authorization, only: [:index, :show, :filter, :export, :export_to_gdrive, :new, :create]
   before_action :skip_policy_scope, except: [
-    :index, :show, :edit, :update, :destroy, :filter, :export, :import_csv,
+    :index, :show, :edit, :update, :destroy, :filter, :export, :export_to_gdrive, :import_csv,
     :import_pubmed, :import_endnote, :import_ris, :next_assignment
   ]
 
@@ -145,6 +145,14 @@ class ProjectsController < ApplicationController
   def export
     authorize(@project)
     SimpleExportJob.perform_later(current_user.id, @project.id, export_type_name)
+    flash[:success] = "Export request submitted for project '#{ @project.name }'. You will be notified by email of its completion."
+
+    redirect_to edit_project_path(@project)
+  end
+
+  def export_to_gdrive
+    authorize(@project)
+    GsheetsExportJob.perform_later(current_user.id, @project.id)
     flash[:success] = "Export request submitted for project '#{ @project.name }'. You will be notified by email of its completion."
 
     redirect_to edit_project_path(@project)
