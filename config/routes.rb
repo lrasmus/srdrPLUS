@@ -2,6 +2,10 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   resources :searches, only: [:new, :create]
+  resources :funding_sources, only: [:index]
+  resources :key_question_types, only: [:index]
+  resources :sd_search_databases, only: [:index]
+  resources :key_questions, only: [:index]
 
   devise_for :admins
   devise_for :users, controllers: {
@@ -96,7 +100,20 @@ Rails.application.routes.draw do
   resources :extractions_extraction_forms_projects_sections_type1s, only: [] do
     get 'get_results_populations', on: :member
   end
+
+  resources :pictures, only: [] do
+    delete :delete_image_attachment, on: :member
+  end
+
+  resources :sd_meta_data, only: [:index] do
+    post 'section_update'
+    post 'mapping_update'
+  end
+
+  get 'sd_key_questions/:id/fuzzy_match', to: 'sd_key_questions#fuzzy_match'
+
   resources :projects, concerns: :paginatable, shallow: true do
+    resources :sd_meta_data, except: [:index]
 
     member do
       get  'confirm_deletion'
@@ -221,4 +238,3 @@ Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
-

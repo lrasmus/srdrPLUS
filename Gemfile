@@ -59,6 +59,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  # Annotate Models
+  gem 'annotate', '~> 2.7', '>= 2.7.4'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -155,3 +157,12 @@ gem 'bootsnap'
 
 # Access to AWS S3 Cloud Storage.
 gem "aws-sdk-s3", require: false
+
+# Formatted console logs
+gem "awesome_print"
+
+# Fuzzy Match
+gem "fuzzy_match"
+
+# Font Awesome Icons
+gem "font-awesome-rails"
