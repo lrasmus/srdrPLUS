@@ -24,6 +24,7 @@ class ProjectImporter
     @dedup_map = {}
     @dedup_map['efps'] = {}
     @dedup_map['question'] = {}
+    @dedup_map['qrcf'] = {}
 
     @t1_link_dict = {}
     @eefps_t1_link_dict = {}
@@ -40,14 +41,14 @@ class ProjectImporter
 
       ## PROJECT INFO
       @p.update!({
-                     name: phash['name'],
-                     description: phash['description'],
-                     attribution: phash['attribution'],
-                     methodology_description: phash['methodology_description'],
-                     prospero: phash['prospero'],
-                     doi: phash['doi'],
-                     notes: phash['notes'],
-                     funding_source: phash['funding_source']})
+                     name: phash['name'] || @p.name,
+                     description: phash['description'] || @p.description,
+                     attribution: phash['attribution'] || @p.attribution,
+                     methodology_description: phash['methodology_description'] || @p.methodology_description,
+                     prospero: phash['prospero'] || @p.prospero,
+                     doi: phash['doi'] || @p.doi,
+                     notes: phash['notes'] || @p.notes,
+                     funding_source: phash['funding_source'] || @p.funding_source})
 
       ## KEY QUESTIONS
       phash['key_questions']&.each(&method(:import_key_question))
@@ -62,6 +63,8 @@ class ProjectImporter
       phash['tasks']&.values&.each(&method(:import_task))
 
       ## EFPSs
+      # We destroy default EFPSs first
+      @p.extraction_forms_projects.first.extraction_forms_projects_sections.destroy_all
       position_counter = 0
       phash['extraction_forms']&.values&.each do |efhash|
         efhash['sections']&.each do |sid, shash|
@@ -79,11 +82,7 @@ class ProjectImporter
         q_tuples.sort! { |t1, t2| t1[0] <=> t2[0] }
         q_tuples.each.with_index do |tuple, index|
           q = tuple[1]
-          begin
-            q.ordering.update!( position: index + 1 )
-          rescue
-            byebug
-          end
+          q.ordering.update!( position: index + 1 )
         end
       end
 
@@ -199,6 +198,7 @@ class ProjectImporter
 
     kq = KeyQuestion.find_or_create_by!(name: kqhash['name'])
     kqp = KeyQuestionsProject.find_or_create_by!(project: @p, key_question: kq)
+
     @id_map['kqp'][kqpid] = kqp
   end
 
@@ -403,9 +403,8 @@ class ProjectImporter
       #create efps first
       efpsohash = shash['extraction_forms_projects_section_option']
       if efpsohash.present?
-        ExtractionFormsProjectsSectionOption.create! extraction_forms_projects_section: efps,
-                                                     by_type1: efpsohash['by_type1'],
-                                                     include_total: efpsohash['include_total']
+        efps.extraction_forms_projects_section_option.update! by_type1: efpsohash['by_type1'],
+                                                              include_total: efpsohash['include_total']
       end
     end
 
@@ -482,7 +481,7 @@ class ProjectImporter
 
   def import_question(efps, qid, qhash)
     if @id_map['question'][qid].present?
-      return @id_map['eefpst1'][qid]
+      return @id_map['question'][qid]
     end
 
     q_dedup_key = get_question_dedup_key(qhash)
@@ -491,6 +490,13 @@ class ProjectImporter
     end
     if @dedup_map['question'][efps.id][q_dedup_key].present?
       @id_map['question'][qid] = @dedup_map['question'][efps.id][q_dedup_key]
+      qhash['question_rows']&.values&.each_with_index do |qrhash, ri|
+        qrhash['question_row_columns']&.values&.each_with_index do |qrchash, ci|
+          @dedup_map['qrcf'][@dedup_map['question'][efps.id][q_dedup_key].id][ri][ci].each_with_index do |qrcfid, qi|
+            @id_map['qrcf'][qrchash['question_row_column_fields']&.keys[qi]] = qrcfid
+          end
+        end
+      end
       return @dedup_map['question'][efps.id][q_dedup_key]
     end
 
@@ -551,6 +557,9 @@ class ProjectImporter
         end
 
         qrcfarr = qrc.question_row_column_fields.order('id ASC')
+        @dedup_map['qrcf'][q.id] ||= {}
+        @dedup_map['qrcf'][q.id][ri] ||= {}
+        @dedup_map['qrcf'][q.id][ri][ci] ||= qrcfarr
         qrchash['question_row_column_fields']&.keys&.each_with_index do |qrcfid, fi|
           qrcf = qrcfarr[fi]
           @id_map['qrcf'][qrcfid] = qrcf
@@ -640,12 +649,14 @@ class ProjectImporter
 
       shash['extractions_extraction_forms_projects_sections_type1s']&.each do |eefpst1id, eefpst1hash|
         eefpst1 = @id_map['eefpst1'][eefpst1id.to_i]
+        eefpst1.extractions_extraction_forms_projects_sections_type1_rows.where(population_name_id: 1).destroy_all
 
         eefpst1hash['populations']&.each do |popid, pophash|
           pop_name = PopulationName.find_or_create_by! name: pophash['population_name']['name'], description: (pophash['population_name']['description'] || "")
           pop = ExtractionsExtractionFormsProjectsSectionsType1Row.find_or_create_by! extractions_extraction_forms_projects_sections_type1: eefpst1,
                                                                                       population_name: pop_name
 
+          pop.extractions_extraction_forms_projects_sections_type1_row_columns.where(timepoint_name_id: 1).destroy_all
           @id_map['population'][popid.to_i] = pop
 
           pophash['timepoints']&.each do |tpid, tphash|
@@ -700,6 +711,7 @@ class ProjectImporter
               end
             end
 
+            rss.result_statistic_sections_measures.destroy_all
             rsshash['result_statistic_sections_measures']&.each do |rssmid, rssmhash|
               m = Measure.find_or_create_by!(name: rssmhash['measure']['name'])
               rssm = ResultStatisticSectionsMeasure.find_or_create_by!({result_statistic_section: rss,
@@ -707,13 +719,9 @@ class ProjectImporter
 
               if rssmhash['records'].present?
                 rssmhash['records']['tps_comparisons_rssms']&.values&.each do |tchash|
-                  begin
                   tcr = TpsComparisonsRssm.create!({timepoint: @id_map['tp'][tchash['timepoint_id']],
                                                     comparison: @id_map['comparison'][tchash['comparison_id']],
                                                     result_statistic_sections_measure: rssm})
-                  rescue
-                    byebug
-                  end
 
                   Record.create!({recordable_type: 'TpsComparisonsRssm',
                                   recordable_id: tcr.id,
@@ -763,9 +771,11 @@ class ProjectImporter
       shash['records']&.each do |rid, rhash|
         qrcfid = rhash['question_row_column_field_id'].to_s
         qrcf = @id_map['qrcf'][qrcfid]
-        if qrcf.nil?; byebug end
         qrc_type_name = qrcf.question_row_column.question_row_column_type.name
         eefpst1 = @id_map['eefpst1'][rhash['extractions_extraction_forms_projects_sections_type1_id']]
+        if rhash['extractions_extraction_forms_projects_sections_type1_id'].present? and eefpst1.nil?
+          byebug
+        end
         eefpsqrcf = ExtractionsExtractionFormsProjectsSectionsQuestionRowColumnField.find_or_create_by! extractions_extraction_forms_projects_section: eefps,
                                                                                                         extractions_extraction_forms_projects_sections_type1: eefpst1,
                                                                                                         question_row_column_field: qrcf

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_28_033212) do
+ActiveRecord::Schema.define(version: 2019_05_09_021656) do
 
   create_table "abstrackr_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "profile_id"
@@ -560,6 +560,13 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
     t.index ["projects_users_role_id"], name: "index_epur_on_pur_id"
   end
 
+  create_table "file_types", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_file_types_on_name", unique: true
+  end
+
   create_table "frequencies", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "deleted_at"
@@ -581,6 +588,30 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
     t.datetime "updated_at", null: false
     t.index ["funding_source_id"], name: "index_funding_sources_sd_meta_data_on_funding_source_id"
     t.index ["sd_meta_datum_id"], name: "index_funding_sources_sd_meta_data_on_sd_meta_datum_id"
+  end
+
+  create_table "import_types", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_import_types_on_name", unique: true
+  end
+
+  create_table "imported_files", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "user_id"
+    t.integer "file_type_id"
+    t.integer "import_type_id"
+    t.integer "section_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "key_question_id"
+    t.index ["file_type_id"], name: "index_imported_files_on_file_type_id"
+    t.index ["import_type_id"], name: "index_imported_files_on_import_type_id"
+    t.index ["key_question_id"], name: "index_imported_files_on_key_question_id"
+    t.index ["project_id"], name: "index_imported_files_on_project_id"
+    t.index ["section_id"], name: "index_imported_files_on_section_id"
+    t.index ["user_id"], name: "index_imported_files_on_user_id"
   end
 
   create_table "journals", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -742,7 +773,7 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
     t.datetime "created_at", null: false
     t.datetime "revoked_at"
     t.string "scopes"
-    t.index ["application_id"], name: "fk_rails_b4b53e07b8"
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
@@ -756,7 +787,7 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
     t.datetime "created_at", null: false
     t.string "scopes"
     t.string "previous_refresh_token", default: "", null: false
-    t.index ["application_id"], name: "fk_rails_732cb83ab7"
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
@@ -1081,7 +1112,7 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
   end
 
   create_table "records", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name"
+    t.text "name"
     t.string "recordable_type"
     t.integer "recordable_id"
     t.datetime "deleted_at"
@@ -1352,10 +1383,10 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
     t.string "query"
     t.string "normalized_query"
     t.integer "results_count"
-    t.datetime "created_at"
+    t.timestamp "created_at"
     t.string "convertable_type"
     t.integer "convertable_id"
-    t.datetime "converted_at"
+    t.timestamp "converted_at"
     t.index ["convertable_type", "convertable_id"], name: "index_searchjoy_searches_on_convertable_type_and_convertable_id"
     t.index ["created_at"], name: "index_searchjoy_searches_on_created_at"
     t.index ["search_type", "created_at"], name: "index_searchjoy_searches_on_search_type_and_created_at"
@@ -1540,6 +1571,12 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
     t.string "unlock_token"
     t.datetime "locked_at"
     t.integer "user_type_id"
+    t.string "provider"
+    t.string "uid"
+    t.string "token"
+    t.integer "expires_at"
+    t.boolean "expires"
+    t.string "refresh_token"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -1647,6 +1684,11 @@ ActiveRecord::Schema.define(version: 2019_04_28_033212) do
   add_foreign_key "extractions_projects_users_roles", "projects_users_roles"
   add_foreign_key "funding_sources_sd_meta_data", "funding_sources"
   add_foreign_key "funding_sources_sd_meta_data", "sd_meta_data"
+  add_foreign_key "imported_files", "file_types"
+  add_foreign_key "imported_files", "import_types"
+  add_foreign_key "imported_files", "projects"
+  add_foreign_key "imported_files", "sections"
+  add_foreign_key "imported_files", "users"
   add_foreign_key "journals", "citations"
   add_foreign_key "key_questions_projects", "extraction_forms_projects_sections"
   add_foreign_key "key_questions_projects", "key_questions"
