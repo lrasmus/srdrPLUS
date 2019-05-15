@@ -50,4 +50,4 @@ passenger*
 storage/
 
 # Ignore reports
-reports
+reports/
