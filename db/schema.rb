@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_13_010621) do
+ActiveRecord::Schema.define(version: 2019_05_13_010821) do
 
   create_table "abstrackr_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.integer "profile_id"
@@ -1384,6 +1384,7 @@ ActiveRecord::Schema.define(version: 2019_05_13_010621) do
     t.boolean "section_flag_5", default: false, null: false
     t.boolean "section_flag_6", default: false, null: false
     t.string "report_accession_id"
+    t.text "authors"
   end
 
   create_table "sd_other_items", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
