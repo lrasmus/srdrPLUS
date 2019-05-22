@@ -28,7 +28,7 @@ document.addEventListener 'turbolinks:load', ->
       timers[formId] = setTimeout( submitForm( $form ), 750 )
 
     # Text Field.
-    $( 'form.edit_record input' ).keyup ( e ) ->
+    $( 'form.edit_record input, form.edit_record textarea' ).keyup ( e ) ->
       e.preventDefault()
 
       # Ignore 'keyup' for a list of keys.
