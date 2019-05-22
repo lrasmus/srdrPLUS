@@ -44,6 +44,7 @@ class Project < ApplicationRecord
 
   has_many :key_questions_projects, dependent: :destroy, inverse_of: :project
   has_many :key_questions, through: :key_questions_projects, dependent: :destroy
+  has_many :questions, through: :key_questions_projects
   ## this does not feel right - Birol
   has_many :orderings, through: :key_questions_projects, dependent: :destroy
 
