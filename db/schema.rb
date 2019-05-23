@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_13_010821) do
+ActiveRecord::Schema.define(version: 2019_05_23_061820) do
 
   create_table "abstrackr_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.integer "profile_id"
@@ -217,6 +217,14 @@ ActiveRecord::Schema.define(version: 2019_05_13_010821) do
     t.index ["comparable_element_id"], name: "index_comparates_on_comparable_element_id"
     t.index ["comparate_group_id"], name: "index_comparates_on_comparate_group_id"
     t.index ["deleted_at"], name: "index_comparates_on_deleted_at"
+  end
+
+  create_table "comparison_outcome_intervention_subgroups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.text "name"
+    t.bigint "sd_meta_datum_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sd_meta_datum_id"], name: "index_cois_on_sd_meta_datum_id"
   end
 
   create_table "comparisons", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -751,6 +759,14 @@ ActiveRecord::Schema.define(version: 2019_05_13_010821) do
     t.index ["message_type_id"], name: "index_messages_on_message_type_id"
   end
 
+  create_table "network_meta_analysis_results", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.text "name"
+    t.integer "sd_meta_datum_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sd_meta_datum_id"], name: "index_network_meta_analysis_results_on_sd_meta_datum_id"
+  end
+
   create_table "notes", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "notable_type"
     t.integer "notable_id"
@@ -826,6 +842,14 @@ ActiveRecord::Schema.define(version: 2019_05_13_010821) do
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at"
     t.index ["name"], name: "index_organizations_on_name", unique: true
+  end
+
+  create_table "pairwise_meta_analytic_results", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.text "name"
+    t.integer "sd_meta_datum_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sd_meta_datum_id"], name: "index_pairwise_meta_analytic_results_on_sd_meta_datum_id"
   end
 
   create_table "population_names", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -1313,6 +1337,7 @@ ActiveRecord::Schema.define(version: 2019_05_13_010821) do
     t.boolean "section_flag_6", default: false, null: false
     t.string "report_accession_id"
     t.text "authors"
+    t.boolean "section_flag_7", default: false, null: false
   end
 
   create_table "sd_other_items", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -1706,9 +1731,11 @@ ActiveRecord::Schema.define(version: 2019_05_13_010821) do
   add_foreign_key "measurements", "comparisons_measures"
   add_foreign_key "message_types", "frequencies"
   add_foreign_key "messages", "message_types"
+  add_foreign_key "network_meta_analysis_results", "sd_meta_data"
   add_foreign_key "notes", "projects_users_roles"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "pairwise_meta_analytic_results", "sd_meta_data"
   add_foreign_key "predictions", "citations_projects"
   add_foreign_key "priorities", "citations_projects"
   add_foreign_key "profiles", "organizations"
