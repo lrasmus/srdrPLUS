@@ -49,10 +49,17 @@ class SimpleExportJob < ApplicationJob
       # Default sample 3D pie chart.
       build_sample_3d_pie_chart(p)
 
-      p.serialize('simple.xlsx')
-
-      # Notify the user that the export is ready for download.
-      ExportMailer.notify_simple_export_completion(@user.id, @project.id).deliver_later
+      f_name = 'tmp/simple_exports/project_' + @project.id.to_s + '_' + Time.now.strftime('%s') + '.xlsx'
+      if p.serialize(f_name)
+        exported_file = ExportedFile.create user: @user, project: @project, file_type: FileType.find_by(name: '.xlsx')
+        exported_file.content.attach io: File.open(f_name), filename: f_name
+        # Notify the user that the export is ready for download.
+        if exported_file.content.attached?
+          ExportMailer.notify_simple_export_completion(exported_file.id).deliver_later
+        else
+          byebug
+        end
+      end
     end
   end
 end
