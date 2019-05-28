@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_28_043503) do
+ActiveRecord::Schema.define(version: 2019_05_28_061807) do
 
   create_table "abstrackr_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.integer "profile_id"
@@ -1277,6 +1277,14 @@ ActiveRecord::Schema.define(version: 2019_05_28_043503) do
     t.index ["sd_meta_datum_id"], name: "index_sd_evidence_tables_on_sd_meta_datum_id"
   end
 
+  create_table "sd_forest_plots", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.text "name"
+    t.integer "sd_meta_datum_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sd_meta_datum_id"], name: "index_sd_forest_plots_on_sd_meta_datum_id"
+  end
+
   create_table "sd_grey_literature_searches", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.integer "sd_meta_datum_id"
     t.text "name"
@@ -1827,6 +1835,7 @@ ActiveRecord::Schema.define(version: 2019_05_28_043503) do
   add_foreign_key "screening_options", "screening_option_types"
   add_foreign_key "sd_analytic_frameworks", "sd_meta_data"
   add_foreign_key "sd_evidence_tables", "sd_meta_data"
+  add_foreign_key "sd_forest_plots", "sd_meta_data"
   add_foreign_key "sd_grey_literature_searches", "sd_meta_data"
   add_foreign_key "sd_journal_article_urls", "sd_meta_data"
   add_foreign_key "sd_key_questions", "key_questions"
