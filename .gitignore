@@ -51,3 +51,6 @@ storage/
 
 # Ignore reports
 reports/
+
+# Ignore Google Service Account Credentials
+/config/google_service_account_credentials.json
