@@ -6,9 +6,9 @@
     = export_to_gdrive_project_url @project.id
 
   div#project-ids.grid-x.grid-padding-x data-key-question-project-ids="#{@key_question_project_ids}"
-    div.cell.small-3
+    /div.cell.small-3
       = link_to "Sign In to Google Required", user_google_oauth2_omniauth_authorize_path, method: :get, class: "button", target: :blank
-    div.cell.small-9
+    div.cell.small-12
       div.button.start-query style="float: right; margin-left: 10px;" Start Query
       div.button.alert.remove-last-column style="float: right; margin-left: 10px;" Remove Last Column
       div.button.success.add-column style="float: right; margin-left: 10px;" Add Column
@@ -121,7 +121,7 @@ javascript:
     });
     var keyQuestionProjectIds = $('#project-ids').
       data('key-question-project-ids').
-      split("").
+      split(",").
       slice(1).
       map(function(string) { return Number(string) })
 
