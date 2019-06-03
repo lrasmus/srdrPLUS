@@ -171,4 +171,6 @@ gem "font-awesome-rails"
 gem "google-api-client"
 
 # Allows us to authenticate via Google's servers, so we can create google exports
-gem 'omniauth-google-oauth2'
+gem "omniauth-google-oauth2"
+
+gem "googleauth"
