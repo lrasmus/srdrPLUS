@@ -1423,7 +1423,7 @@ ActiveRecord::Schema.define(version: 2019_06_03_051857) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "sd_prisma_flows", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+  create_table "sd_prisma_flows", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "sd_meta_datum_id"
     t.text "name"
     t.datetime "created_at", null: false
