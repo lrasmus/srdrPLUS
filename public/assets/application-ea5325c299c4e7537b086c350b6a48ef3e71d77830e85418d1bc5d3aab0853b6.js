@@ -29555,6 +29555,9 @@ S2.define('select2/dropdown/attachBody',[
   };
 
   AttachBody.prototype._hideDropdown = function (decorated) {
+    if ($(document.activeElement).closest(this.$dropdownContainer).length) {
+      $(document.activeElement).blur();
+    }
     this.$dropdownContainer.detach();
   };
 
@@ -59612,7 +59615,6 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
                       case "checkbox":
                         return $(td_elem).find('input.check_boxes').each(function(input_id, input_elem) {
                           return $(input_elem).change(function() {
-                            console.log("LOYLOY");
                             return apply_coloring();
                           });
                         });
@@ -59775,8 +59777,6 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
                   } else {
                     if (value !== consolidated_value[tr_id][td_id]) {
                       return color_dict[tr_id][td_id] = "#D1F2EB";
-                    } else {
-                      return color_dict[tr_id][td_id] = "#E8DAEF";
                     }
                   }
                 });
@@ -59784,7 +59784,9 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
             });
             return $.each(color_dict, function(tr_id, color_tr_dict) {
               return $.each(color_tr_dict, function(td_id, color) {
-                return consolidated_cell[tr_id][td_id].css('background', color);
+                if (!!consolidated_cell[tr_id][td_id]) {
+                  return consolidated_cell[tr_id][td_id].css('background', color);
+                }
               });
             });
           });
@@ -60003,6 +60005,10 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
 
 }).call(this);
 (function() {
+
+
+}).call(this);
+(function() {
   document.addEventListener('turbolinks:load', function() {
     (function() {
       var append_citations, citationList, fetch_from_pubmed, filterProjectList, list_options, populate_citation_fields;
@@ -60035,17 +60041,68 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
         $('#project-filter').focus();
       });
       if ($('body.projects.new').length === 1) {
+        $('.distiller-section-file-container').on('cocoon:after-insert', function(_, insertedElem) {
+          var $new_kq_input, $source_kq_input;
+          $(insertedElem).find('.distiller-section-input').select2({
+            placeholder: "-- Select Section --",
+            tags: true
+          });
+          $new_kq_input = $(insertedElem).find('.distiller-key-question-input');
+          if ($('.distiller-section-file-container select.distiller-key-question-input').length > 1) {
+            $source_kq_input = $('.distiller-section-file-container select.distiller-key-question-input').first();
+            $source_kq_input.find('option').each(function(_, kq_option) {
+              var $kq_option;
+              $kq_option = $(kq_option);
+              if ($new_kq_input.find('option[value="' + $kq_option.val() + '"]').length === 0) {
+                $new_kq_input.append(new Option($kq_option.val(), $kq_option.val(), false, false));
+              }
+              return $new_kq_input.trigger('change');
+            });
+          }
+          return $new_kq_input.select2({
+            placeholder: "-- Select Key Question --",
+            tags: true
+          }).on('change', function(e) {
+            var $isNew;
+            $isNew = $(this).find('[data-select2-tag="true"]');
+            if ($isNew.length && $isNew.val() === $(this).val()) {
+              return $('.distiller-section-file-container select.distiller-key-question-input').each(function(_, kq_input) {
+                var $kq_input;
+                $kq_input = $(kq_input);
+                if ($kq_input.find('option[value="' + $isNew.val() + '"]').length === 0) {
+                  $kq_input.append(new Option($isNew.val(), $isNew.val(), false, false)).trigger('change');
+                }
+                return $isNew.replaceWith(new Option($isNew.val(), $isNew.val(), false, true));
+              });
+            }
+          });
+        });
         $('#create-type').on('change', function(e) {
           $('.input.file input').val('');
           if ($(e.target).val() === "empty") {
             $('.distiller-import-panel').addClass('hide');
-            return $('.json-import-panel').addClass('hide');
+            $('.json-import-panel').addClass('hide');
+            $('#distiller-remove-references-file').trigger("click");
+            $('#distiller-remove-section-file').trigger("click");
+            $('#remove-project-file').trigger("click");
+            $('.submit').removeClass('hide');
+            return $('.submit-with-confirmation').addClass('hide');
           } else if ($(e.target).val() === "distiller") {
             $('.distiller-import-panel').removeClass('hide');
-            return $('.json-import-panel').addClass('hide');
+            $('.json-import-panel').addClass('hide');
+            $('#distiller-add-references-file').trigger("click");
+            $('#distiller-add-section-file').trigger("click");
+            $('#remove-project-file').trigger("click");
+            $('.submit').addClass('hide');
+            return $('.submit-with-confirmation').removeClass('hide');
           } else if ($(e.target).val() === "json") {
             $('.distiller-import-panel').addClass('hide');
-            return $('.json-import-panel').removeClass('hide');
+            $('.json-import-panel').removeClass('hide');
+            $('#distiller-remove-references-file').trigger("click");
+            $('#distiller-remove-section-file').trigger("click");
+            $('#add-project-file').trigger("click");
+            $('.submit').addClass('hide');
+            return $('.submit-with-confirmation').removeClass('hide');
           }
         });
       }
@@ -60139,8 +60196,6 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
               journal['name'] = $(data).find('Journal').find('Title').text() || '';
               journal['issue'] = $(data).find('JournalIssue').find('Issue').text() || '';
               journal['vol'] = $(data).find('JournalIssue').find('Volume').text() || '';
-              console.log($(data).find('JournalIssue').find('Volume').text());
-              console.log($(data).find('JournalIssue').find('Issue').text());
               dateNode = $(data).find('JournalIssue').find('PubDate');
               if ($(dateNode).find('Year').length > 0) {
                 journal['year'] = $(dateNode).find('Year').text();
@@ -60162,7 +60217,6 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
         };
         populate_citation_fields = function(citation) {
           var author, authorselect, i, j, keyword, keywordselect, len, len1, ref, ref1;
-          console.log(citation['journal']);
           $('.citation-fields').find('.citation-name input').val(citation['name']);
           $('.citation-fields').find('.citation-abstract textarea').val(citation['abstract']);
           $('.citation-fields').find('.journal-name input').val(citation['journal']['name']);
@@ -60510,7 +60564,7 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
         }
         return timers[formId] = setTimeout(submitForm($form), 750);
       });
-      return $('form.edit_record input').keyup(function(e) {
+      return $('form.edit_record input, form.edit_record textarea').keyup(function(e) {
         var $form, code, formId;
         e.preventDefault();
         code = e.keyCode || e.which;
@@ -60771,6 +60825,99 @@ var List=function(t){function e(n){if(r[n])return r[n].exports;var i=r[n]={i:n,l
       return $('.options-table .switch input').on('change', switch_option_handler);
     })();
   });
+
+}).call(this);
+(function() {
+
+
+}).call(this);
+(function() {
+  document.addEventListener('turbolinks:load', function() {
+    (function() {
+      var formatResult, formatResultSelection, init_select2, sd_meta_datum_id;
+      formatResultSelection = function(result, container) {
+        return result.text;
+      };
+      formatResult = function(result) {
+        var markup;
+        if (result.loading) {
+          return result.text;
+        }
+        markup = '<span>';
+        if (~result.text.indexOf('Pirate')) {
+          markup += '<img src=\'https://s-media-cache-ak0.pinimg.com/originals/01/ee/fe/01eefe3662a40757d082404a19bce33b.png\' alt=\'pirate flag\' height=\'32\' width=\'32\'> ';
+        }
+        if (~result.text.indexOf('New item: ')) {
+          markup += '';
+        }
+        markup += result.text;
+        if (result.suggestion) {
+          markup += ' (suggested by ' + result.suggestion.first_name + ')';
+        }
+        markup += '</span>';
+        return markup;
+      };
+      init_select2 = function(selector, url) {
+        return $(selector).select2({
+          minimumInputLength: 0,
+          ajax: {
+            url: url,
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+              return {
+                q: params.term,
+                page: params.page
+              };
+            },
+            processResults: function(data, params) {
+              params.page = params.page || 1;
+              return {
+                results: $.map(data.items, function(i) {
+                  return {
+                    id: i.id,
+                    text: i.name,
+                    suggestion: i.suggestion
+                  };
+                })
+              };
+            }
+          },
+          escapeMarkup: function(markup) {
+            return markup;
+          },
+          templateResult: formatResult,
+          templateSelection: formatResultSelection
+        });
+      };
+      init_select2("#sd_meta_datum_funding_source_ids", '/funding_sources');
+      init_select2("#sd_meta_datum_key_question_type_ids", '/key_question_types');
+      init_select2(".sd_search_database", '/sd_search_databases');
+      init_select2(".key_question", '/key_questions');
+      init_select2(".key_question_type", '/key_question_types');
+      sd_meta_datum_id = $(".sd_picods_key_question").data('sd-meta-datum-id');
+      init_select2(".sd_picods_key_question", "/sd_key_questions?sd_meta_datum_id=" + sd_meta_datum_id);
+      init_select2(".sd_picods_type", '/sd_picods_types');
+      $("form").on("cocoon:after-insert", function(_, row) {
+        sd_meta_datum_id = $(".sd_picods_key_question").data('sd-meta-datum-id');
+        init_select2($(row).find(".sd_search_database"), '/sd_search_databases');
+        init_select2($(row).find(".key_question"), '/key_questions');
+        init_select2($(row).find(".key_question_type"), '/key_question_types');
+        return init_select2($(row).find(".sd_picods_key_question"), "/sd_key_questions?sd_meta_datum_id=" + sd_meta_datum_id);
+      });
+      $("a[data-remote]").on("ajax:success", function(event) {
+        return $(this).parent().closest('div').fadeOut();
+      });
+    })();
+  });
+
+}).call(this);
+(function() {
+
+
+}).call(this);
+(function() {
+
 
 }).call(this);
 (function() {
