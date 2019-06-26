@@ -107,10 +107,10 @@ class CustomExporter
 
     @inclusion_dict = identify_independents project, @col_args
 
-    @t1_efps_dict = create_efps_dict @inclusion_dict, @efps_arr
+    @t1_efps_dict = create_efps_dict
 
     #### COMPUTE COMPARATE LENGTH ####
-    @comparate_1_length, @comparate_2_length = get_comparate_lengths(project)
+    @comparate_1_length, @comparate_2_length = compute_comparate_lengths(project)
     #### COLUMN HEADERS ####
   end
 
@@ -139,7 +139,7 @@ class CustomExporter
         rich_text = Axlsx::RichText.new
         col_hash['export_items'].each do |_, export_item|
           if export_item['type'] == "Type2"
-            process_qids(rich_text, [export_item['export_id']], extraction, current_combination, @t1_efps_dict)
+            process_qids(rich_text, [export_item['export_id']], extraction, current_combination)
             rich_text.add_run "\n"
           else
             arm_eefpst1 = current_combination[0]
@@ -168,21 +168,13 @@ class CustomExporter
     @user.profile.username
   end
 
-  def get_inclusion_dictionary
-    @inclusion_dict
-  end
-
-  def get_type1_efps_dictionary
-    @t1_efps_dict
-  end
-
-  def create_efps_dict(inclusion_dict, efps_arr)
+  def create_efps_dict
     #other type1s
     t1_efps_dict = {}
-    if inclusion_dict['arms_efps'] then t1_efps_dict[inclusion_dict['arms_efps'].id] = 0 end
-    if inclusion_dict['outcomes_efps'] then t1_efps_dict[inclusion_dict['outcomes_efps'].id] = 1 end
+    if @inclusion_dict['arms_efps'] then t1_efps_dict[@inclusion_dict['arms_efps'].id] = 0 end
+    if @inclusion_dict['outcomes_efps'] then t1_efps_dict[@inclusion_dict['outcomes_efps'].id] = 1 end
     i = 5
-    efps_arr.each do |efps|
+    @efps_arr.each do |efps|
       t1_efps_dict[efps.id] = i
       i += 1
     end
@@ -191,16 +183,13 @@ class CustomExporter
 
 
   def get_combinations_for_extraction(ex)
-    inclusion_dict = get_inclusion_dictionary
-    t1_efps_dict = get_type1_efps_dictionary
-
     combinable_arr = []
-    arms_efps = inclusion_dict['arms_efps']
-    outcomes_efps = inclusion_dict['outcomes_efps']
-    include_tps = inclusion_dict['timepoints']
-    include_pops = inclusion_dict['populations']
-    include_comp_arms = inclusion_dict['arms_comparisons']
-    include_comp_tps = inclusion_dict['timepoints_comparisons']
+    arms_efps = @inclusion_dict['arms_efps']
+    outcomes_efps = @inclusion_dict['outcomes_efps']
+    include_tps = @inclusion_dict['timepoints']
+    include_pops = @inclusion_dict['populations']
+    include_comp_arms = @inclusion_dict['arms_comparisons']
+    include_comp_tps = @inclusion_dict['timepoints_comparisons']
 
     if arms_efps.present?
       eefps = ExtractionsExtractionFormsProjectsSection.find_by extraction: ex,
@@ -278,9 +267,11 @@ class CustomExporter
     end
 
 
-    t1_efps_dict.each do |efps_id, _|
-      eefps = ExtractionsExtractionFormsProjectsSection.find_by extraction: ex,
-                                                                extraction_forms_projects_section_id: efps_id
+    t1_efps_arr = ExtractionsExtractionFormsProjectsSection.includes(:extractions_extraction_forms_projects_sections_type1s)\
+                                                           .where(extraction: ex,
+                                                                  extraction_forms_projects_section_id: @t1_efps_dict.keys) || []
+
+    t1_efps_arr.each do |eefps|
       combinable_arr << eefps.extractions_extraction_forms_projects_sections_type1s.all
     end
 
@@ -290,12 +281,8 @@ class CustomExporter
     flat_combination_arr = []
 
     # flatten array manually
-    begin
-      temp_combination_arr.each do |arr_elem|
-        flat_combination_arr << [arr_elem[0]] + arr_elem[1]
-      end
-    rescue
-      byebug
+    temp_combination_arr.each do |arr_elem|
+      flat_combination_arr << [arr_elem[0]] + arr_elem[1]
     end
     return flat_combination_arr
   end
@@ -430,8 +417,9 @@ class CustomExporter
         qrcf_arr = qrc.question_row_column_fields.sort { |a,b| a.id <=> b.id }
         qrc_type_id = qrc.question_row_column_type_id
         eefpsqrcf_arr = t2_eefps\
-            .extractions_extraction_forms_projects_sections_question_row_column_fields.where( question_row_column_field: qrcf_arr,
-                                                                                              extractions_extraction_forms_projects_sections_type1: eefpst1 )
+            .extractions_extraction_forms_projects_sections_question_row_column_fields\
+            .where( question_row_column_field: qrcf_arr,
+                    extractions_extraction_forms_projects_sections_type1: eefpst1 )
 
         record_arr = Record.where( recordable_type: 'ExtractionsExtractionFormsProjectsSectionsQuestionRowColumnField',
                                    recordable_id: eefpsqrcf_arr.map { |eefpsqrcf| eefpsqrcf.id } ).sort { |a,b| a.recordable_id <=> b.recordable_id }
@@ -473,16 +461,16 @@ class CustomExporter
   end
 
 
-  def process_qids(rich_text, qid_arr, extraction, combination, t1_efps_dict)
+  def process_qids(rich_text, qid_arr, extraction, combination)
     qid_arr.each do |qid|
       q = Question.find qid
 
       t2_eefps = ExtractionsExtractionFormsProjectsSection.find_by extraction: extraction,
-                                                                extraction_forms_projects_section: q.extraction_forms_projects_section
+                                                                   extraction_forms_projects_section: q.extraction_forms_projects_section
       t1_efps = q.extraction_forms_projects_section.link_to_type1
 
       if t1_efps.present?
-        eefpst1 = combination[t1_efps_dict[t1_efps.id]]
+        eefpst1 = combination[@t1_efps_dict[t1_efps.id]]
       end
       process_question(rich_text, q, t2_eefps, eefpst1)
     end
@@ -492,17 +480,16 @@ class CustomExporter
 
   def get_headers
     header_arr = ["Study ID", "Study Title", "Username"]
-    inclusion_dict = get_inclusion_dictionary
 
-    if inclusion_dict['arms_efps'].present? then header_arr << "Arm" end
-    if inclusion_dict['outcomes_efps'].present? then header_arr << "Outcome" end
-    if inclusion_dict['populations'] then header_arr << "Population" end
-    if inclusion_dict['timepoints'] then header_arr << "Timepoint" end
-    if inclusion_dict['arms_comparisons']
+    if @inclusion_dict['arms_efps'].present? then header_arr << "Arm" end
+    if @inclusion_dict['outcomes_efps'].present? then header_arr << "Outcome" end
+    if @inclusion_dict['populations'] then header_arr << "Population" end
+    if @inclusion_dict['timepoints'] then header_arr << "Timepoint" end
+    if @inclusion_dict['arms_comparisons']
       header_arr += ((1..(@comparate_1_length + @comparate_2_length)).map.with_index { |x, i| "Arm #{(i+1).to_s}"})
       header_arr << "Comparison"
     end
-    if inclusion_dict['timepoints_comparisons']
+    if @inclusion_dict['timepoints_comparisons']
       header_arr << "Timepoint 1"
       header_arr << "Timepoint 2"
       header_arr << "Comparison"
@@ -627,7 +614,7 @@ class CustomExporter
     end
   end
 
-  def get_comparate_lengths(project)
+  def compute_comparate_lengths(project)
     comp1_length = 1
     comp2_length = 1
 
