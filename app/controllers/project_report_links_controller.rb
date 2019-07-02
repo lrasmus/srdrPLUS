@@ -71,24 +71,41 @@ class ProjectReportLinksController < ApplicationController
     end
 
     def get_rssm_groups(project_id)
+      rssms = []
       if params[:type1s].present?
-        extractions_extraction_forms_projects_sections_type1 = {
-          type1_id: params[:type1s].values,
-          extractions_extraction_forms_projects_sections: {
-            extractions: { project_id: project_id },
-            extraction_forms_projects_section_id: params[:type1s].keys,
+        params[:type1s].each do |efps_id, type1_ids|
+          extractions_extraction_forms_projects_sections_type1 = {
+            type1_id: type1_ids,
+            extractions_extraction_forms_projects_sections: {
+              extractions: { project_id: project_id },
+              extraction_forms_projects_section_id: [efps_id],
+            }
           }
-        }
+          rssms_batch = ResultStatisticSectionsMeasure.
+            joins(result_statistic_section: {
+              population: {
+                extractions_extraction_forms_projects_sections_type1: {
+                  extractions_extraction_forms_projects_section: {
+                    extraction: :project
+                  }
+                }
+              }
+            }).
+            where(result_statistic_section: {
+              population: {
+                extractions_extraction_forms_projects_sections_type1s: extractions_extraction_forms_projects_sections_type1
+              }
+            })
+          rssms += rssms_batch
+        end
+        rssms.uniq!(&:measure_id)
       else
         extractions_extraction_forms_projects_sections_type1 = {
           extractions_extraction_forms_projects_sections: {
             extractions: { project_id: project_id },
           }
         }
-      end
-
-      ordered_2d = []
-      rssms = ResultStatisticSectionsMeasure.
+        rssms = ResultStatisticSectionsMeasure.
         joins(result_statistic_section: {
           population: {
             extractions_extraction_forms_projects_sections_type1: {
@@ -104,7 +121,11 @@ class ProjectReportLinksController < ApplicationController
           }
         }).
         uniq(&:measure_id)
+      end
+
+
       rssms = rssms.group_by { |rssm| rssm.result_statistic_section.result_statistic_section_type }
+      ordered_2d = []
       rssms.each do |key, values|
         values_with_efps_id = values.map { |rssm| { rssm: rssm, efps_id: rssm.result_statistic_section.population.extractions_extraction_forms_projects_section.extraction_forms_projects_section_id } }
         ordered_2d[MEASURES_ORDER.index(key.name)] = [key, values_with_efps_id]
