@@ -12,7 +12,7 @@ module SharedPublishableMethods
     # Requesting publishing will create a Publishing record which
     # carries the information of who submitted the request.
     def request_publishing_by(user)
-      publishings.create(user: user)
+      Publishing.create(user: user)
     end
 
     # Params:
@@ -23,7 +23,7 @@ module SharedPublishableMethods
     # Requesting publishing will create a Publishing record which
     # carries the information of who submitted the request.
     def request_publishing
-      publishings.create(user: User.current)
+      Publishing.create(user: User.current)
     end
   end
 

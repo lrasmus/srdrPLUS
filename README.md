@@ -6,6 +6,7 @@
 * System dependencies
   * Bundler 1.16.0
   * MariaDB 10.1.23 or equivalent
+  * Elasticsearch [Ubuntu instructions](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-18-04)
 
 * Configuration
   * To install all required libraries and dependent software use the following command inside the project folder
@@ -17,28 +18,27 @@
   * To start in production you must first create the assets via the following command
 
   ```
-  bundle exec rails assets:precompile
+  bundle exec rake assets:precompile
   ```
 
 * Database creation
   * Before running the following command, ensure that the username and password is correctly entered in /config/database.rb
+
+You will need to set some environment variables so that you can create the database.  Note that these are just for testing, you should NEVER do this in production!
+
+Run the following from the command line:
+
+```
+export SRDRPLUS_DATABASE_USERNAME=root
+export SRDRPLUS_DATABASE_PASSWORD=root
+export SRDRPLUS_DATABASE_HOST=localhost
+export SRDRPLUS_DATABASE_SCHEMA=srdrPLUS_development
+```
+
   * Next run the following command inside the project folder
 
   ```
-  bundle exec rails db:create
-  ```
-
-* Database initialization
-  * To initialize and seed the database use the following command inside the project folder
-
-  ```
-  bundle exec rails db:seed
-  ```
-
-  * You may perform both of the above steps together with the following command
-
-  ```
-  bundle exec rails db:setup
+  bundle exec rake db:setup
   ```
 
 * How to run the test suite
