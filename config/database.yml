@@ -13,14 +13,14 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: <%= ENV['SRDRPLUS_DATABASE_USERNAME'] %>
-  password: <%= ENV['SRDRPLUS_DATABASE_PASSWORD'] %>
-  host: <%= ENV['SRDRPLUS_DATABASE_HOST'] %>
+  username: <%= ENV.fetch('SRDRPLUS_DATABASE_USERNAME') %>
+  password: <%= ENV.fetch('SRDRPLUS_DATABASE_PASSWORD') %>
+  host: <%= ENV.fetch('SRDRPLUS_DATABASE_HOST') %>
   reconnect: true
 
 development:
   <<: *default
-  database: <%= ENV['SRDRPLUS_DATABASE_SCHEMA'] %>
+  database: <%= ENV.fetch('SRDRPLUS_DATABASE_SCHEMA') %>
 #  variables:
 #    sql_mode: TRADITIONAL
 
@@ -52,7 +52,7 @@ test:
 #
 production:
   <<: *default
-  host: <%= ENV['SRDRPLUS_DATABASE_HOST'] %>
-  database: <%= ENV['SRDRPLUS_DATABASE_SCHEMA'] %>
-  username: <%= ENV['SRDRPLUS_DATABASE_USERNAME'] %>
-  password: <%= ENV['SRDRPLUS_DATABASE_PASSWORD'] %>
+  host: <%= ENV.fetch('SRDRPLUS_DATABASE_HOST') %>
+  database: <%= ENV.fetch('SRDRPLUS_DATABASE_SCHEMA') %>
+  username: <%= ENV.fetch('SRDRPLUS_DATABASE_USERNAME') %>
+  password: <%= ENV.fetch('SRDRPLUS_DATABASE_PASSWORD') %>
