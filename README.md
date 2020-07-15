@@ -69,7 +69,7 @@ export SRDRPLUS_DATABASE_SCHEMA=srdrPLUS_development
   * To start the server we use the following command
 
   ```
-  bunde exec rails server
+  bundle exec rails server
   ```
 
   * Mail configuration can be found in /config/environment/production.rb. A sample configuration might look like the following
