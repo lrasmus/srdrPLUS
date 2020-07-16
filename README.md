@@ -7,6 +7,7 @@
   * Bundler 1.16.0
   * MariaDB 10.1.23 or equivalent
   * Elasticsearch [Ubuntu instructions](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-18-04)
+  * Redis [Ubuntu instructions](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04)
 
 * Configuration
   * To install all required libraries and dependent software use the following command inside the project folder
@@ -39,7 +40,15 @@ export SRDRPLUS_DATABASE_SCHEMA=srdrPLUS_development
 
   ```
   bundle exec rake db:setup
+  bundle exec rake team_type_tasks:AddSeedNames
   ```
+
+* You need to set the MySql option for how GROUP BY is handled.  From the MySql command line, run the following in your database.
+
+```
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+```
 
 * How to run the test suite
   * To run the test suite, run the following command in the terminal
@@ -98,4 +107,9 @@ export SRDRPLUS_DATABASE_SCHEMA=srdrPLUS_development
 * Generate Quality Dimension default questions
   ```
   bundle exec rails add_quality_dimensions
+  ```
+
+* Start sidekiq
+  ```
+  bundle exec sidekiq -q default
   ```
