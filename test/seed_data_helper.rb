@@ -119,6 +119,12 @@ module SeedData
         { name: 'Adverse Event' }
       ])
 
+      CitationType.create!([
+        { name: 'Primary' },
+        { name: 'Secondary' },
+        { name: 'Abstrackr' }
+      ])
+
       @type1_type_categorical = Type1Type.find_by(name: 'Categorical')
       @type1_type_continuous = Type1Type.find_by(name: 'Continuous')
 
