@@ -6,14 +6,6 @@ html class='no-js' lang='en'
 
     title == content_for?(:title) ? yield(:title) : 'SRDR+'
 
-    script[async src="https://www.googletagmanager.com/gtag/js?id=UA-146336211-1"]
-    script
-      |  window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-146336211-1');
-
-    script[async src="https://www.googletagmanager.com/gtag/js?id=UA-76714758-1"]
-    script
-      |  window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-76714758-1');
-
     script src="https://kit.fontawesome.com/a55e144d79.js" crossorigin="anonymous"
 
     / Roboto Font Family
@@ -34,7 +26,7 @@ html class='no-js' lang='en'
     = Gon::Base.render_data(camelCase: true)
     = render 'shared/noscript'
 
-    iframe src="/ahrq_header.html" text="AHRQ Header" title="AHRQ Header" height="130" width="100%" frameborder="0" scrolling="no" seemless
+    iframe src="/wiley_header.html" text="Wiley Lab Header" title="Wiley Lab Header" height="130" width="100%" frameborder="0" scrolling="no" seemless
       p Browser does not support iframes. Please update your browser to for a better viewing experience.
 
     - if content_for?(:content)
@@ -64,7 +56,7 @@ html class='no-js' lang='en'
             = render 'shared/scroll_top_wrapper'
 
 
-    iframe src="/ahrq_footer.html" text="AHRQ Footer" title="AHRQ Footer" height="350" width="100%" frameborder="0" scrolling="no" seemless
+    iframe src="/wiley_footer.html" text="AHRQ Footer" title="AHRQ Footer" height="350" width="100%" frameborder="0" scrolling="no" seemless
       p Browser does not support iframes. Please update your browser to for a better viewing experience.
 
     = render 'toastr_rails/flash'
