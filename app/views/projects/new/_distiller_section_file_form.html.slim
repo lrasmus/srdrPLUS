@@ -12,7 +12,7 @@
 
     .row
       .columns.small-12.medium-6.large-6
-        = f.input :import_type_id, as: :hidden, input_html: { value: ImportType.find_by(name: 'Distiller Section').id }
+        = f.input :import_type_id, as: :hidden, input_html: { value: ImportType.find_by(name: 'Distiller').id }
         = f.input :content, as: :file, label: "File"
         = f.input :file_type_id, as: :hidden, input_html: { value: FileType.find_by( name: 'Distiller Section' ).id }
       .columns.small-12.medium-6.large-6
