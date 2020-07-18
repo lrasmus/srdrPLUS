@@ -51411,6 +51411,11 @@ function __guardMethod__(obj, methodName, transform) {
           });
         });
       }
+      $('.projects.edit').find('#project_method_description_select2').select2({
+        tags: true,
+        allowClear: true,
+        placeholder: '-- Select or type other --'
+      });
     })();
   });
 
@@ -52027,6 +52032,9 @@ function __guardMethod__(obj, methodName, transform) {
         $parent.find('.collapse-content').removeClass('hide');
         $parent.find('.not-collapsed-icon').removeClass('hide');
         $parent.find('.collapsed-icon').addClass('hide');
+        $('textarea').each(function() {
+          return this.style.height = this.scrollHeight + "px";
+        });
         return Collapser._state_dict[$parent.find('.collapse-content').data('result-item-id')] = false;
       });
       return $('.not-collapsed-icon').on('click', function() {
@@ -52049,7 +52057,10 @@ function __guardMethod__(obj, methodName, transform) {
           $parent = $('.collapse-content[data-result-item-id="' + result_item_id + '"]').closest('.nested-fields');
           $parent.find('.collapse-content').removeClass('hide');
           $parent.find('.not-collapsed-icon').removeClass('hide');
-          results.push($parent.find('.collapsed-icon').addClass('hide'));
+          $parent.find('.collapsed-icon').addClass('hide');
+          results.push($('textarea').each(function() {
+            return this.style.height = this.scrollHeight + "px";
+          }));
         } else {
           results.push(void 0);
         }
@@ -52274,16 +52285,15 @@ function __guardMethod__(obj, methodName, transform) {
       add_form_listeners(form);
       $cocoon_container = $(form).parents('.cocoon-container');
       return $cocoon_container.on('sd:form-loaded', function(e) {
-        $('.reveal').foundation();
         add_form_listeners($cocoon_container.children('form'));
         Collapser.initialize_listeners();
         Collapser.restore_states();
         apply_all_select2();
-        StatusChecker.get_all_inputs().each(function() {
-          this.style.height = "";
+        $('textarea').each(function() {
           return this.style.height = this.scrollHeight + "px";
         });
-        return Select2Helper.copy_sd_outcome_names();
+        Select2Helper.copy_sd_outcome_names();
+        return $('.reveal').foundation();
       });
     });
     $('.infoDiv').first().on('sd:replaced-html-content', function(e) {
@@ -52320,14 +52330,14 @@ function __guardMethod__(obj, methodName, transform) {
     if (status === true || status === 'true') {
       $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch')).removeClass('draft warning');
       $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch')).addClass('completed');
-      $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch')).html('Completed');
+      $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch span.status-label')).html('Completed');
       if (panelNumber === '3') {
         $('.mapping-kq-title').removeClass('hide');
       }
     } else {
       $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch')).removeClass('completed warning');
       $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch')).addClass('draft');
-      $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch')).html('Draft');
+      $('#'.concat(panelNumber.toString(), '-yes-no-section.status-switch span.status-label')).html('Draft');
       if (panelNumber === '3') {
         $('.mapping-kq-title').addClass('hide');
       }
@@ -52370,8 +52380,7 @@ function __guardMethod__(obj, methodName, transform) {
       initializeSwitches();
       bind_srdr20_saving_mechanism();
       apply_all_select2();
-      return StatusChecker.get_all_inputs().each(function() {
-        this.style.height = "";
+      return $('textarea').each(function() {
         return this.style.height = this.scrollHeight + "px";
       });
     })();
