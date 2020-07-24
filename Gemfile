@@ -9,8 +9,6 @@ gem 'rails', '~> 5.2.0'
 
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.5'
-# Use Puma as the app server
-gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -34,10 +32,6 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'dotenv-rails'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
-gem 'rails-erd', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -45,7 +39,6 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem "rspec_junit_formatter"
-  gem 'dotenv-rails'
 end
 
 group :test do
