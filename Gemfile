@@ -32,7 +32,6 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'dotenv-rails'
 
-
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
@@ -142,7 +141,7 @@ gem 'sortable-rails'
 gem 'httparty'
 
 # New for Rails 5.2.
-#gem 'bootsnap'
+gem 'bootsnap'
 
 # Access to AWS S3 Cloud Storage.
 gem 'aws-sdk-s3', require: false
