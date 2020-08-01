@@ -3,7 +3,25 @@
 }
 
 #header-top #disclaimer {
-  padding-top: 10px;
-  font-size: 1.0em;
-  padding-bottom: 10px;
+  padding-top: 3px;
+  font-size: 0.75em;
+}
+
+#header-top .logo {
+  display: inline-block;
+  max-height: 50px;
+  max-width: 225px;
+  padding: 8px 4px 8px 12px;
+  vertical-align: middle;
+  float: left;
+}
+
+#header-top .title {
+  font-size: 2.0em;
+  font-weight: bold;
+}
+
+#header-top .header-content {
+  display: inline-block;
+  padding: 8px;
 }
