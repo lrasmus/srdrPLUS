@@ -5,22 +5,22 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.3'
 
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.5'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 5.0', '>= 5.0.7'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails', '~> 4.2', '>= 4.2.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
-gem 'jquery-turbolinks'
+gem 'jquery-rails', '>= 4.3.3'
+gem 'jquery-turbolinks', '>= 2.1.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -30,18 +30,18 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-gem 'dotenv-rails'
+gem 'dotenv-rails', '>= 2.7.2'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-  gem 'factory_bot_rails'
-  gem 'rspec-rails'
+  gem 'factory_bot_rails', '>= 5.0.1'
+  gem 'rspec-rails', '>= 3.8.2'
   gem "rspec_junit_formatter"
 end
 
 group :test do
-  gem 'minitest-rails-capybara'
+  gem 'minitest-rails-capybara', '>= 3.0.1'
   gem 'simplecov', require: false
   gem 'minitest-byebug'
 end
@@ -66,20 +66,20 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 ## Non-default gems.
 
 # Use Zurb Foundation as Front-End Framework
-gem 'foundation-rails'
+gem 'foundation-rails', '>= 6.5.3.0'
 gem 'autoprefixer-rails'
-gem 'foundation-icons-sass-rails'
+gem 'foundation-icons-sass-rails', '>= 3.0.0'
 
 # Prettier templates.
-gem 'slim-rails'
+gem 'slim-rails', '>= 3.2.0'
 
 # Simplified forms.
-gem 'simple_form'
+gem 'simple_form', '>= 5.0.0'
 gem 'country_select'
 gem 'cocoon'
 
 # Authentication.
-gem 'devise'
+gem 'devise', '>= 4.7.1'
 gem 'omniauth'
 gem 'remotipart', github: 'mshibuya/remotipart'
 gem 'rails_admin', '~> 1.3.0'
@@ -95,26 +95,26 @@ gem 'paranoia', '~>2.2'
 gem 'faker', github: 'stympy/faker'
 
 # Access ruby data in JavaScript.
-gem 'gon'
+gem 'gon', '>= 6.2.1'
 
 # Pagination.
-gem 'kaminari'
+gem 'kaminari', '>= 1.1.1'
 
 # CORS.
 gem 'rack-cors'
 
 # Help DRY up code.
-gem 'responders'
+gem 'responders', '>= 2.4.1'
 
 # Api documentation.
-gem 'apipie-rails'
+gem 'apipie-rails', '>= 0.5.15'
 
 # Background jobs.
 gem 'sidekiq'
 
 # Spreadsheet generation.
 gem 'axlsx', git: 'https://github.com/randym/axlsx.git'
-gem 'axlsx_rails'
+gem 'axlsx_rails', '>= 0.5.2'
 
 # Searching with Elasticsearch.
 gem 'searchkick'
@@ -170,7 +170,7 @@ gem "omniauth-google-oauth2"
 gem "googleauth"
 
 # Allows users to drop files to upload
-gem "dropzonejs-rails"
+gem "dropzonejs-rails", ">= 0.8.4"
 
 # for things like cloning questions (extraction forms maybe?)
 gem "amoeba"
