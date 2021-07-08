@@ -41,7 +41,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'minitest-rails-capybara'
+  gem 'minitest-rails-capybara', '>= 3.0.1'
   gem 'simplecov', require: false
   gem 'minitest-byebug'
 end
@@ -147,7 +147,7 @@ gem 'bootsnap'
 gem 'aws-sdk-s3', require: false
 
 # Access Google sheets programmatically
-gem 'google-api-client'
+gem 'google-api-client', '>= 0.30.8'
 
 # Allows periodic background jobs
 gem 'sidekiq-cron', '~> 1.1'
@@ -167,7 +167,7 @@ gem 'fuzzy_match'
 # Allows us to authenticate via Google's servers, so we can create google exports
 gem "omniauth-google-oauth2"
 
-gem "googleauth"
+gem "googleauth", ">= 0.9.0"
 
 # Allows users to drop files to upload
 gem "dropzonejs-rails"
