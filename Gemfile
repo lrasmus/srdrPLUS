@@ -110,7 +110,7 @@ gem 'responders'
 gem 'apipie-rails'
 
 # Background jobs.
-gem 'sidekiq'
+gem 'sidekiq', '>= 6.2.1'
 
 # Spreadsheet generation.
 gem 'axlsx', git: 'https://github.com/randym/axlsx.git'
@@ -150,7 +150,7 @@ gem 'aws-sdk-s3', require: false
 gem 'google-api-client'
 
 # Allows periodic background jobs
-gem 'sidekiq-cron', '~> 1.1'
+gem 'sidekiq-cron', '~> 1.1', '>= 1.1.0'
 
 # For making sortable searchable tables
 gem 'jquery-datatables'
