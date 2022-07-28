@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.8', '>= 5.2.8.1'
 
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.5'
@@ -56,7 +56,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   # Annotate Models
-  gem 'annotate', '~> 2.7', '>= 2.7.4'
+  gem 'annotate', '~> 2.7', '>= 2.7.5'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -89,7 +89,7 @@ gem 'toastr_rails'
 
 # Versioning of models + soft-delete.
 gem 'paper_trail'
-gem 'paranoia', '~>2.2'
+gem 'paranoia', '~> 2.4', '>= 2.4.1'
 
 # Create lots of data.
 gem 'faker', github: 'stympy/faker'
