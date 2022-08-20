@@ -80,7 +80,7 @@ gem 'cocoon'
 
 # Authentication.
 gem 'devise'
-gem 'omniauth'
+gem 'omniauth', '>= 2.0.0'
 gem 'remotipart', github: 'mshibuya/remotipart'
 gem 'rails_admin', '~> 1.3.0'
 
