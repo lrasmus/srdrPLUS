@@ -138,7 +138,7 @@ gem 'pundit'
 gem 'sortable-rails'
 
 # Simple calls to external API.
-gem 'httparty'
+gem 'httparty', '>= 0.21.0'
 
 # New for Rails 5.2.
 gem 'bootsnap'
