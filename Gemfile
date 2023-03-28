@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 6.1.7', '>= 6.1.7.3'
 
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.5'
@@ -82,7 +82,7 @@ gem 'cocoon'
 gem 'devise'
 gem 'omniauth'
 gem 'remotipart', github: 'mshibuya/remotipart'
-gem 'rails_admin', '~> 1.3.0'
+gem 'rails_admin', '~> 2.0.0'
 
 # Flash messages.
 gem 'toastr_rails'
