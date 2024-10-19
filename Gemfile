@@ -5,12 +5,12 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 7.0.0'
 
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.5'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0', '>= 6.0.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -82,7 +82,7 @@ gem 'cocoon'
 gem 'devise'
 gem 'omniauth'
 gem 'remotipart', github: 'mshibuya/remotipart'
-gem 'rails_admin', '~> 1.3.0'
+gem 'rails_admin', '~> 3.0.0'
 
 # Flash messages.
 gem 'toastr_rails'
@@ -107,7 +107,7 @@ gem 'rack-cors'
 gem 'responders'
 
 # Api documentation.
-gem 'apipie-rails'
+gem 'apipie-rails', '>= 0.6.0'
 
 # Background jobs.
 gem 'sidekiq'
